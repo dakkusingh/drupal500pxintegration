@@ -18,13 +18,11 @@ function d500px_admin_form($form, &$form_state) {
     '#description' => t('To enable OAuth based access for 500px, you must <a href="@url">register your application</a> with 500px and add the provided keys here.', array('@url' => 'http://developers.500px.com/settings/applications?from=developers')),
   );
 
-
   $form['oauth']['callback_url'] = array(
     '#type' => 'item',
     '#title' => t('Callback URL'),
     '#markup' => url('d500px/oauth', array('absolute' => TRUE)),
   );
-  
   
   $form['oauth']['d500px_consumer_key'] = array(
     '#type' => 'textfield',
@@ -32,13 +30,20 @@ function d500px_admin_form($form, &$form_state) {
     '#default_value' => variable_get('d500px_consumer_key', NULL),
   );  
 
-
   $form['oauth']['d500px_consumer_secret'] = array(
     '#type' => 'textfield',
     '#title' => t('OAuth Consumer secret'),
     '#default_value' => variable_get('d500px_consumer_secret', NULL),
   );
+
   
-    
+  // 500px external APIs settings.
+  $form['d500px'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('500px Settings'),
+    '#description' => t('The following settings connect 500px module with external APIs.'),
+  );
+  
+      
   return system_settings_form($form);
 }
