@@ -1,0 +1,6 @@
+<?php
+
+define ('D500PX_HOST',         'http://500px.com');
+define ('D500PX_API',          'https://api.500px.com/v1/');
+
+
