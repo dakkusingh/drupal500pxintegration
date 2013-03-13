@@ -43,7 +43,13 @@ function d500px_admin_form($form, &$form_state) {
     '#title' => t('500px Settings'),
     '#description' => t('The following settings connect 500px module with external APIs.'),
   );
-  
+
+
+  $form['d500px']['d500px_host'] = array(
+    '#type' => 'textfield',
+    '#title' => t('500px Host'),
+    '#default_value' => variable_get('d500px_host', D500PX_HOST),
+  );  
       
   return system_settings_form($form);
 }
