@@ -37,6 +37,10 @@ function d500px_menu() {
   );
   
     
-  
+  $items['admin/config/services/d500px/default'] = array(
+    'title' => '500px Integration Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+    
   return $items;  
 }
