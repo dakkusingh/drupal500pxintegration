@@ -57,8 +57,9 @@ function d500px_test(){
   
   $content  = $connection->call('photos', array('feature' => 'fresh_today'));
   $content2  = $connection->call('photos', array('feature' => 'user', 'username' => $d500px_username));
-  dpm($content);
-  dpm($content2);
   
-  return '';
+  //dpm($content);
+  //dpm($content2);
+  
+  return 'Hello';
 }
