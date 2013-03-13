@@ -15,6 +15,17 @@ function d500px_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'd500px.lib.php',
   );
+
+
+  $items['d500px/oauth'] = array(
+    'title' => '500px OAuth',
+    'access callback' => TRUE,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('d500px_oauth_callback'),
+    'type' => MENU_CALLBACK,
+    'file' => 'd500px.pages.inc',
+  );
+  
   
   return $items;  
 }
