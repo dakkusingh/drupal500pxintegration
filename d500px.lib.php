@@ -79,5 +79,20 @@ class D500px {
     parse_str($response, $token);
     $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
     return $token;
-  }  
+  } 
+  
+  
+  /**
+   * Performs an authenticated request.
+   */
+  public function auth_request($url, $params = array(), $method = 'GET') {
+    $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $params);
+    $request->sign_request($this->signature_method, $this->consumer, $this->token);
+    switch ($method) {
+      case 'GET':
+        return $this->request($request->to_url());
+      case 'POST':
+        return $this->request($request->get_normalized_http_url(), $request->get_parameters(), 'POST');
+    }
+  }   
 }
