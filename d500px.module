@@ -44,3 +44,21 @@ function d500px_menu() {
     
   return $items;  
 }
+
+
+
+function d500px_test(){
+  /* Build D500px object with client credentials. */
+  $d500px_consumer_key = variable_get('d500px_consumer_key', '');
+  $d500px_consumer_secret = variable_get('d500px_consumer_secret', '');
+  $d500px_username = variable_get('d500px_username', '');
+  
+  $connection = new D500px($d500px_consumer_key, $d500px_consumer_secret);
+  
+  $content  = $connection->call('photos', array('feature' => 'fresh_today'));
+  $content2  = $connection->call('photos', array('feature' => 'user', 'username' => $d500px_username));
+  dpm($content);
+  dpm($content2);
+  
+  return '';
+}
