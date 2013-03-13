@@ -175,9 +175,28 @@ class D500px {
   }
 
 
+  /********************************************//**
+   * Utilities
+   ***********************************************/
+  /**
+   * Calls a 500px API endpoint.
+   */
+  public function call($path, $params = array(), $method = 'GET') {
+    $url = $this->create_url($path);
 
+    try {
+      $response = $this->auth_request($url, $params, $method);
+    }
+    catch (D500pxException $e) {
+      watchdog('D500px', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
+      return FALSE;
+    }
 
-
-
+    if (!$response) {
+      return FALSE;
+    }
+    
+    return $this->parse_response($response);
+  }
        
 }
