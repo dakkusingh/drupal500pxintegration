@@ -19,6 +19,14 @@ function d500px_admin_form($form, &$form_state) {
   );
 
 
-
+  $form['oauth']['callback_url'] = array(
+    '#type' => 'item',
+    '#title' => t('Callback URL'),
+    '#markup' => url('d500px/oauth', array('absolute' => TRUE)),
+  );
+  
+  
+  
+  
   return system_settings_form($form);
 }
