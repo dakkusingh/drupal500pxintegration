@@ -25,7 +25,18 @@ function d500px_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'd500px.pages.inc',
   );
+
+
+  $items['admin/config/services/d500px'] = array(
+    'title' => '500px Integration Settings',
+    'description' => '500px settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('d500px_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'd500px.pages.inc',
+  );
   
+    
   
   return $items;  
 }
