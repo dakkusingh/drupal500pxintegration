@@ -161,7 +161,18 @@ class D500px {
   }
 
 
-
+  /**
+   * Creates an API endpoint URL.
+   *
+   * @param string $path
+   *   The path of the endpoint.
+   * @return
+   *   The complete path to the endpoint.
+   */
+  protected function create_url($path) {
+    $url =  variable_get('d500px_api', D500PX_API) .'/v1/'. $path;
+    return $url;
+  }
 
 
 
