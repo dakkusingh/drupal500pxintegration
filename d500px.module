@@ -4,3 +4,17 @@ define ('D500PX_HOST',         'http://500px.com');
 define ('D500PX_API',          'https://api.500px.com/v1/');
 
 
+/**
+ * Implements hook_menu().
+ */
+function d500px_menu() {
+  $items['d500px/test'] = array(
+    'title' => '500px test',
+    'access callback' => TRUE,
+    'page callback' => 'd500px_test',
+    'type' => MENU_CALLBACK,
+    'file' => 'd500px.lib.php',
+  );
+  
+  return $items;  
+}
