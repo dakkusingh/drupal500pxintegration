@@ -26,7 +26,11 @@ function d500px_admin_form($form, &$form_state) {
   );
   
   
-  
+  $form['oauth']['d500px_consumer_key'] = array(
+    '#type' => 'textfield',
+    '#title' => t('OAuth Consumer key'),
+    '#default_value' => variable_get('d500px_consumer_key', NULL),
+  );  
   
   return system_settings_form($form);
 }
