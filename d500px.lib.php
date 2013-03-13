@@ -94,5 +94,44 @@ class D500px {
       case 'POST':
         return $this->request($request->get_normalized_http_url(), $request->get_parameters(), 'POST');
     }
-  }   
+  }
+  
+  
+  /**
+   * Performs a request.
+   *
+   * @throws D500pxException
+   */
+  protected function request($url, $params = array(), $method = 'GET') {
+    $data = '';
+    if (count($params) > 0) {
+      if ($method == 'GET') {
+        $url .= '?'. http_build_query($params, '', '&');
+      }
+      else {
+        $data = http_build_query($params, '', '&');
+      }
+    }
+
+    $headers = array();
+    $headers['Authorization'] = 'Oauth';
+    $headers['Content-type'] = 'application/x-www-form-urlencoded';
+    $response = $this->doRequest($url, $headers, $method, $data);
+    
+    if (!isset($response->error)) {
+      return $response->data;
+    }
+    else {
+      $error = $response->error;
+      $data = $this->parse_response($response->data);
+      if (isset($data['error'])) {
+        $error = $data['error'];
+      }
+      throw new D500pxException($error);
+    }
+  }
+  
+  
+  
+       
 }
