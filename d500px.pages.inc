@@ -44,7 +44,6 @@ function d500px_admin_form($form, &$form_state) {
     '#description' => t('The following settings connect 500px module with external APIs.'),
   );
 
-
   $form['d500px']['d500px_host'] = array(
     '#type' => 'textfield',
     '#title' => t('500px Host'),
