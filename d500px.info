@@ -1,0 +1,6 @@
+name = 500px Integration
+description = 500px Integration for Drupal provides API access to 500px web functionality and content.
+package = 500px
+core = 7.x
+configure = admin/config/services/d500px/settings
+dependencies[] = oauth_common
