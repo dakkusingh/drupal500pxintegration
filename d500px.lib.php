@@ -51,5 +51,10 @@ class D500px {
   }
 
 
-  
+  public function get_authorize_url($token) {
+    $url = variable_get('d500px_api', D500PX_API) . '/v1/oauth/authorize';
+    $url.= '?oauth_token=' . $token['oauth_token'];
+
+    return $url;
+  }  
 }
