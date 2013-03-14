@@ -171,7 +171,14 @@ function d500px_block_contents($delta) {
     $image_size_key => $image_size,
   );
   
+  // add category if its not all
+  if ($block_settings['only'] != '- All -') {
+    $params += array('only' => $block_settings['only']);
+  }
+  
   $content = $connection->call('photos', $params);
+  
+  //dpm($content);
   
   $output['#markup'] = 'foobar';
   
@@ -197,6 +204,8 @@ function d500px_block_commonform($previous_settings) {
   $username = '';
   if (isset($previous_settings['username'])) { $username = $previous_settings['username']; }      
 
+  $only = '- All -';
+  if (isset($previous_settings['only'])) { $only = $previous_settings['only']; }  
 
   $form['d500px_block_common'] = array(
     '#type' => 'fieldset', 
@@ -254,6 +263,45 @@ function d500px_block_commonform($previous_settings) {
     '#required'           => FALSE,
     '#description'        => t('All per-user streams require a user_id or username parameter.'),
     '#element_validate'   => array('d500px_block_commonform_username_validate'),
+  );
+
+  $form['d500px_block_common']['only'] = array(
+    '#type'               => 'select', 
+    '#title'              => t('Photo Category'),
+    '#options'            => array(
+                                    '- All -' => '- All -',
+                                    'Uncategorized'   => 'Uncategorized',
+                                    'Abstract'  => 'Abstract',
+                                    'Animals'  => 'Animals',
+                                    'Black and White'   => 'Black and White',
+                                    'Celebrities'   => 'Celebrities',
+                                    'City and Architecture'   => 'City and Architecture',
+                                    'Commercial'  => 'Commercial',
+                                    'Concert'  => 'Concert',
+                                    'Family'  => 'Family',
+                                    'Fashion'  => 'Fashion',
+                                    'Film'  => 'Film',
+                                    'Fine Art'  => 'Fine Art',
+                                    'Food'  => 'Food',
+                                    'Journalism'   => 'Journalism',
+                                    'Landscapes'   => 'Landscapes',
+                                    'Macro'  => 'Macro',
+                                    'Nature'  => 'Nature',
+                                    'Nude'  => 'Nude',
+                                    'People'  => 'People',
+                                    'Performing Arts'  => 'Performing Arts',
+                                    'Sport'  => 'Sport',
+                                    'Still Life'   => 'Still Life',
+                                    'Street'  => 'Street',
+                                    'Transporation'  => 'Transporation',
+                                    'Travel'  => 'Travel',
+                                    'Underwater'  => 'Underwater',
+                                    'Urban Exploration'  => 'Urban Exploration',
+                                    'Wedding'  => 'Wedding',    
+                             ),
+    '#default_value'      => $only,
+    '#description'        => t('If you want results from a specific category'),
+    //'#required'           => TRUE,
   );
   
   return $form;
