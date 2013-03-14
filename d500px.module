@@ -63,3 +63,17 @@ function d500px_test(){
   
   return 'Hello';
 }
+
+
+
+/**
+ * Implements hook_block_info().
+ */
+function d500px_block_info() {
+
+  $blocks['d500px_photos_popular'] = array(
+    'info' => t('500px Popular Photos'),
+  );
+
+  return $blocks;
+}
