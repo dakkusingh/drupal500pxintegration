@@ -55,12 +55,6 @@ function d500px_admin_form($form, &$form_state) {
     '#title' => t('500px API'),
     '#default_value' => variable_get('d500px_api', D500PX_API),
   );
-
-  $form['d500px']['d500px_username'] = array(
-    '#type' => 'textfield',
-    '#title' => t('500px Username'),
-    '#default_value' => variable_get('d500px_username', ''),
-  );
       
   return system_settings_form($form);
 }
