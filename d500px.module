@@ -301,7 +301,7 @@ function d500px_block_commonform($previous_settings) {
                              ),
     '#default_value'      => $only,
     '#description'        => t('If you want results from a specific category'),
-    '#required'           => TRUE,
+    //'#required'           => TRUE,
   );
   
   return $form;
