@@ -104,3 +104,19 @@ function d500px_block_save($delta = '', $edit = array()) {
   
   return;
 }
+
+
+/**
+ * Implements hook_block_view().
+ */
+function d500px_block_view($delta = '') {
+
+  switch ($delta) {
+    case 'd500px_photos_popular':
+      $block['subject'] = t('500px Popular Photos');
+      $block['content'] = d500px_block_contents($delta);
+      break;
+  }
+  
+  return $block;
+}
