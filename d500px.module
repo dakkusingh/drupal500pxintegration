@@ -90,8 +90,14 @@ function d500px_block_info() {
 function d500px_block_configure($delta = '') {
 
   $form = array();
+  // load up the custom form values for this block
+  $previous_settings = variable_get($delta, array());
+  
+  // get the common form
+  $form += d500px_block_commonform($previous_settings);
   
   if ($delta == 'd500px_photos_popular') {
+    
     // todo
   }
   
@@ -104,8 +110,12 @@ function d500px_block_configure($delta = '') {
  */
 function d500px_block_save($delta = '', $edit = array()) {
   if ($delta == 'd500px_photos_popular') {
+          
     // todo
   }
+  
+  // store all custom form values
+  variable_set($delta, $edit);
   
   return;
 }
@@ -140,4 +150,39 @@ function d500px_block_contents($delta) {
   }
   
   return $output;
+}
+
+
+function d500px_block_commonform($previous_settings) {
+  $form = array();
+  
+  $nsfw = 0;
+  if (isset($previous_settings['nsfw'])) { $nsfw = $previous_settings['nsfw']; }
+  
+  $rpp = 20;
+  if (isset($previous_settings['rpp'])) { $rpp = $previous_settings['rpp']; }  
+
+  $form['d500px_block_common'] = array(
+    '#type' => 'fieldset', 
+    '#title' => t('500px Block Settings'), 
+    '#collapsible' => FALSE, 
+    '#collapsed' => FALSE,
+  );
+    
+  $form['d500px_block_common']['nsfw'] = array(
+    '#type'               => 'checkbox', 
+    '#title'              => t('Display NSFW photos?'),
+    '#default_value'      => $nsfw,
+    '#description'        => t('Some photos are Not Safe For Work, use with care.'),
+  );  
+
+  $form['d500px_block_common']['rpp'] = array(
+    '#type'               => 'select', 
+    '#title'              => t('Number of photos to display?'),
+    '#options'            => array(10 => 10, 20 => 20, 30 => 30, 40 => 40, 50 => 50, 60 => 60, 70 => 70, 80 => 80, 90 => 90, 100 => 100),
+    '#default_value'      => $rpp,
+    '#description'        => t('The number of results to return. Can not be over 100, default is 20.'),
+  );
+  
+  return $form;
 }
