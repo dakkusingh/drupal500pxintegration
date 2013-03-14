@@ -120,3 +120,20 @@ function d500px_block_view($delta = '') {
   
   return $block;
 }
+
+
+/**
+ * lets generate block contents.
+ */
+function d500px_block_contents($delta) {
+  $output = array();
+  
+  switch ($delta) {
+
+  case 'd500px_photos_popular':   
+    $output['#markup'] = 'foobar';
+      break;      
+  }
+  
+  return $output;
+}
