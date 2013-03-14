@@ -77,3 +77,18 @@ function d500px_block_info() {
 
   return $blocks;
 }
+
+
+/**
+ * Implements hook_block_configure().
+ */
+function d500px_block_configure($delta = '') {
+
+  $form = array();
+  
+  if ($delta == 'd500px_photos_popular') {
+    // todo
+  }
+  
+  return $form;
+}
