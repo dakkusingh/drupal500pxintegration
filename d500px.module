@@ -92,3 +92,15 @@ function d500px_block_configure($delta = '') {
   
   return $form;
 }
+
+
+/**
+ * Implements hook_block_save().
+ */
+function d500px_block_save($delta = '', $edit = array()) {
+  if ($delta == 'd500px_photos_popular') {
+    // todo
+  }
+  
+  return;
+}
