@@ -50,6 +50,22 @@ function d500px_blocks_block_info() {
 
 
 /**
+ * Implements hook_block_configure().
+ */
+function d500px_blocks_block_configure($delta = '') {
+  $form = array();
+  // load up the custom form values for this block
+  $previous_settings = variable_get($delta, array());
+  
+  // get the common form
+  $form += d500px_blocks_block_commonform($previous_settings);
+  
+  return $form;
+}
+
+
+
+/**
  * implimentation of hook_form_FORM_ID_alter()
  */
 function d500px_blocks_form_d500px_admin_form_alter(&$form, &$form_state, $form_id) {
