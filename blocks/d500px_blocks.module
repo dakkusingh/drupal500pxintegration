@@ -78,6 +78,16 @@ function d500px_blocks_block_save($delta = '', $edit = array()) {
 
 
 /**
+ * Implements hook_block_view().
+ */
+function d500px_blocks_block_view($delta = '') {
+  $block['content'] = d500px_blocks_block_contents($delta);
+  return $block;
+}
+
+
+
+/**
  * implimentation of hook_form_FORM_ID_alter()
  */
 function d500px_blocks_form_d500px_admin_form_alter(&$form, &$form_state, $form_id) {
