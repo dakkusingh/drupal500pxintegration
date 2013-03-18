@@ -265,6 +265,15 @@ function d500px_blocks_block_commonform($previous_settings) {
 
 
 
+function d500px_blocks_block_commonform_username_validate($element, &$form_state, $form) {
+  if (($form_state['values']['feature'] == 'user') and (empty($element['#value']))) {
+    form_error($element, t("Additional parameter 'username' is required"));
+  }
+}
+
+
+
+
 /**
  * implimentation of hook_form_FORM_ID_alter()
  */
