@@ -66,6 +66,18 @@ function d500px_blocks_block_configure($delta = '') {
 
 
 /**
+ * Implements hook_block_save().
+ */
+function d500px_blocks_block_save($delta = '', $edit = array()) {
+  // store all custom form values
+  variable_set($delta, $edit);
+  
+  return;
+}
+
+
+
+/**
  * implimentation of hook_form_FORM_ID_alter()
  */
 function d500px_blocks_form_d500px_admin_form_alter(&$form, &$form_state, $form_id) {
