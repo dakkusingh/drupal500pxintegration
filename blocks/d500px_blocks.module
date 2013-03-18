@@ -139,6 +139,131 @@ function d500px_blocks_block_contents($delta) {
 
 
 
+/**
+ * basic form required for all 500px blocks.
+ */
+function d500px_blocks_block_commonform($previous_settings) {
+  $form = array();
+  
+  $nsfw = 0;
+  if (isset($previous_settings['nsfw'])) { $nsfw = $previous_settings['nsfw']; }
+  
+  $rpp = 20;
+  if (isset($previous_settings['rpp'])) { $rpp = $previous_settings['rpp']; }  
+  
+  $image_size = array(2 => 1);
+  if (isset($previous_settings['image_size'])) { $image_size = $previous_settings['image_size']; }
+  
+  $feature = 'fresh_today';
+  if (isset($previous_settings['feature'])) { $feature = $previous_settings['feature']; }      
+
+  $username = '';
+  if (isset($previous_settings['username'])) { $username = $previous_settings['username']; }      
+
+  $only = '- All -';
+  if (isset($previous_settings['only'])) { $only = $previous_settings['only']; }  
+
+  $form['d500px_blocks_block_common'] = array(
+    '#type' => 'fieldset', 
+    '#title' => t('500px Block Settings'), 
+    '#collapsible' => FALSE, 
+    '#collapsed' => FALSE,
+  );
+
+  $form['d500px_blocks_block_common']['feature'] = array(
+    '#type'               => 'select', 
+    '#title'              => t('Photo stream to be retrieved?'),
+    '#options'            => array(
+                                    "popular" => t("Popular"),
+                                    "upcoming" => t("Upcoming"),
+                                    "editors" => t("Editors' Choice"),
+                                    "fresh_today" => t("Fresh Today"),
+                                    "fresh_yesterday" => t("Fresh Yesterday"),
+                                    "fresh_week" => t("Fresh This Week"),
+                                    "user" => t("User"),
+                             ),
+    '#default_value'      => $feature,
+    '#description'        => t('Photo stream to be retrieved. Default fresh_today.'),
+    //'#required'           => TRUE,
+  );
+    
+  $form['d500px_blocks_block_common']['rpp'] = array(
+    '#type'               => 'select', 
+    '#title'              => t('Number of photos to display?'),
+    '#options'            => array_combine(range(10,100,10),range(10,100,10)),
+    '#default_value'      => $rpp,
+    '#description'        => t('The number of results to return. Can not be over 100, default is 20.'),
+    //'#required'           => TRUE,
+  );
+
+  $form['d500px_blocks_block_common']['image_size'] = array(
+    '#type'               => 'checkboxes', 
+    '#title'              => t('Photo sizes to get?'),
+    '#options'            => array_combine(range(1,4),range(1,4)),
+    '#default_value'      => $image_size,
+    '#description'        => t('The photo size to be returned.'),
+    '#required'           => TRUE,
+  );
+  
+  $form['d500px_blocks_block_common']['nsfw'] = array(
+    '#type'               => 'checkbox', 
+    '#title'              => t('Display NSFW photos?'),
+    '#default_value'      => $nsfw,
+    '#description'        => t('Some photos are Not Safe For Work, use with care.'),
+  );  
+
+  $form['d500px_blocks_block_common']['username'] = array(
+    '#type'               => 'textfield', 
+    '#title'              => t('Username'), 
+    '#default_value'      => $username, 
+    '#required'           => FALSE,
+    '#description'        => t('All per-user streams require a user_id or username parameter.'),
+    '#element_validate'   => array('d500px_blocks_block_commonform_username_validate'),
+  );
+
+  $form['d500px_blocks_block_common']['only'] = array(
+    '#type'               => 'select', 
+    '#title'              => t('Photo Category'),
+    '#options'            => array(
+                                    '- All -' => '- All -',
+                                    'Uncategorized'   => 'Uncategorized',
+                                    'Abstract'  => 'Abstract',
+                                    'Animals'  => 'Animals',
+                                    'Black and White'   => 'Black and White',
+                                    'Celebrities'   => 'Celebrities',
+                                    'City and Architecture'   => 'City and Architecture',
+                                    'Commercial'  => 'Commercial',
+                                    'Concert'  => 'Concert',
+                                    'Family'  => 'Family',
+                                    'Fashion'  => 'Fashion',
+                                    'Film'  => 'Film',
+                                    'Fine Art'  => 'Fine Art',
+                                    'Food'  => 'Food',
+                                    'Journalism'   => 'Journalism',
+                                    'Landscapes'   => 'Landscapes',
+                                    'Macro'  => 'Macro',
+                                    'Nature'  => 'Nature',
+                                    'Nude'  => 'Nude',
+                                    'People'  => 'People',
+                                    'Performing Arts'  => 'Performing Arts',
+                                    'Sport'  => 'Sport',
+                                    'Still Life'   => 'Still Life',
+                                    'Street'  => 'Street',
+                                    'Transporation'  => 'Transporation',
+                                    'Travel'  => 'Travel',
+                                    'Underwater'  => 'Underwater',
+                                    'Urban Exploration'  => 'Urban Exploration',
+                                    'Wedding'  => 'Wedding',    
+                             ),
+    '#default_value'      => $only,
+    '#description'        => t('If you want results from a specific category'),
+    //'#required'           => TRUE,
+  );
+  
+  return $form;
+}
+
+
 
 /**
  * implimentation of hook_form_FORM_ID_alter()
