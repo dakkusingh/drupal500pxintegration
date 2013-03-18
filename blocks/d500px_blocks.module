@@ -1,5 +1,53 @@
 <?php
 
+/**
+ * Implements hook_block_info().
+ */
+function d500px_blocks_block_info() {
+  $blocks = array();
+  
+  $max = variable_get('d500px_blocks_number_blocks', 1);
+  
+  for ($count = 0; $count < $max; $count++) {
+    $delta = 'd500px_blocks_block_'. $count; 
+    
+    // block 0 is confusing
+    $title_count = $count + 1;
+    
+    $previous_settings = variable_get($delta, array());
+
+    $title = t('500px: unconfigured block: ') . ' ' . $title_count;
+   
+    // TODO: better titles??
+    if (!empty($previous_settings['feature'])) {
+      
+      // add title and feature
+      $title = t('500px: ') . $previous_settings['feature']; 
+      
+      // user feature? add username
+      if ($previous_settings['feature'] == 'user') {
+        $title .= ':'. $previous_settings['username'];
+      }
+
+      // selected album? add album name
+      if ($previous_settings['only'] != '- All -') {
+        $title .= ' - '. $previous_settings['only'];
+      }
+      
+      // finally add number of items
+      $title .= ' ('. $previous_settings['rpp'] .')'; 
+    }
+    
+    $blocks[$delta] = array(
+      'info' => $title,
+      'cache' => DRUPAL_NO_CACHE,
+    );
+  }  
+
+  return $blocks;
+}
+
+
 
 /**
  * implimentation of hook_form_FORM_ID_alter()
