@@ -88,6 +88,59 @@ function d500px_blocks_block_view($delta = '') {
 
 
 /**
+ * lets generate block contents.
+ */
+function d500px_blocks_block_contents($delta) {
+  $output = array();
+
+  $connection = d500px_connection();
+  $block_settings = variable_get($delta, array());
+  
+  // there is nothing to display if there is no feature 
+  if (!isset($block_settings['feature'])) {
+    return;
+  }
+
+  // work out image sizes
+  // by default we will fetch an array
+  $image_size = array_filter($block_settings['image_size']);
+  $image_size_key = 'image_size[]';
+  
+  // if sizes its not array, we are fetching a single size
+  if (count($image_size) == 1) {
+    $image_size_key = 'image_size';
+    $image_size = array_pop($image_size);
+  }
+
+  $params = array(
+    'feature' => $block_settings['feature'], 
+    'rpp' => $block_settings['rpp'],
+    $image_size_key => $image_size,
+  );
+  
+  // add category if its not all
+  if ($block_settings['only'] != '- All -') {
+    $params += array('only' => $block_settings['only']);
+  }
+
+  // add username
+  if (!empty($block_settings['username'])) {
+    $params += array('username' => $block_settings['username']);
+  }
+  
+  $content = $connection->call('photos', $params);
+  //dpm($params);
+  //dpm($content);
+  
+  $output['#markup'] = 'this is a dev version of the 500px module and content is yet to be themed';
+  
+  return $output;
+}
+
+
+
+
+/**
  * implimentation of hook_form_FORM_ID_alter()
  */
 function d500px_blocks_form_d500px_admin_form_alter(&$form, &$form_state, $form_id) {
