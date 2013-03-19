@@ -305,4 +305,17 @@ function d500px_blocks_theme() {
 
 
 
+function theme_d500px_blocks_photo($variables) { 
+  $linked_image = theme('d500px_photo', $variables);
+  
+  $output = '';
+  $output .= "<div class='d500px-photo'>";
+  $output .= $linked_image;
+  $output .= "</div>"; 
+  
+  return $output;   
+}
+
+
+
 
