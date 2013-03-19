@@ -88,3 +88,10 @@ function d500px_photo_get_sizes(){
   
   return $d500px_photo_sizes_array;
 }
+
+
+
+
+function d500px_photo_img($photo_array, $size) {
+  return $photo_array['image_url'][$size];  
+}
