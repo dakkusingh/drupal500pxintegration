@@ -123,7 +123,7 @@ function theme_d500px_photo($variables) {
   $photo_url = d500px_photo_page_url($photo_array['id']);
   $title = $photo_array['name'];
   
-  return l($img, $photo_url, array('attributes' => array('title' => $title), 'absolute' => TRUE, 'html' => TRUE)); 
+  return l($img, $photo_url, array('attributes' => array('title' => $title, 'target' => '_blank'), 'absolute' => TRUE, 'html' => TRUE)); 
 }
 
 
