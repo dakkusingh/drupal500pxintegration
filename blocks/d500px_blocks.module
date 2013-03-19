@@ -100,22 +100,11 @@ function d500px_blocks_block_contents($delta) {
   if (!isset($block_settings['feature'])) {
     return;
   }
-
-  // work out image sizes
-  // by default we will fetch an array
-  $image_size = array_filter($block_settings['image_size']);
-  $image_size_key = 'image_size[]';
   
-  // if sizes its not array, we are fetching a single size
-  if (count($image_size) == 1) {
-    $image_size_key = 'image_size';
-    $image_size = array_pop($image_size);
-  }
-
   $params = array(
     'feature' => $block_settings['feature'], 
     'rpp' => $block_settings['rpp'],
-    $image_size_key => $image_size,
+    'image_size[]' => range(1, 4), // better to get all sizes and deal with requested size at theme level
   );
   
   // add category if its not all
@@ -130,7 +119,7 @@ function d500px_blocks_block_contents($delta) {
   
   $content = $connection->call('photos', $params);
   //dpm($params);
-  //dpm($content);
+  dpm($content);
   
   $output['#markup'] = 'this is a dev version of the 500px module and content is yet to be themed';
   
@@ -197,8 +186,8 @@ function d500px_blocks_block_commonform($previous_settings) {
   );
 
   $form['d500px_blocks_block_common']['image_size'] = array(
-    '#type'               => 'checkboxes', 
-    '#title'              => t('Photo sizes to get?'),
+    '#type'               => 'select', 
+    '#title'              => t('Photo size to display?'),
     '#options'            => array_combine(range(1,4),range(1,4)),
     '#default_value'      => $image_size,
     '#description'        => t('The photo size to be returned.'),
@@ -296,3 +285,6 @@ function d500px_blocks_form_d500px_admin_form_alter(&$form, &$form_state, $form_
   );  
   
 }
+
+
+
