@@ -47,3 +47,10 @@ function d500px_connection() {
   
   return $connection;
 }
+
+
+function d500px_photo_page_url($photo_id) {
+  return variable_get('d500px_host', D500PX_HOST) ."/photo/". $photo_id;
+}
+
+
