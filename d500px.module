@@ -125,3 +125,19 @@ function theme_d500px_photo($variables) {
   
   return l($img, $photo_url, array('attributes' => array('title' => $title), 'absolute' => TRUE, 'html' => TRUE)); 
 }
+
+
+
+
+function theme_d500px_photos($variables) {
+  $photos_array = $variables['photos_array'];
+  $size = $variables['size'];
+  
+  $photos_themed = '';
+  
+  foreach ($photos_array as $photo_array) {
+    $photos_themed .= theme('d500px_photo', array('photo_array' => $photo_array, 'size' => $size));
+  }
+  
+  return $photos_themed;
+}
