@@ -111,3 +111,17 @@ function d500px_theme() {
     ),
   );
 }
+
+
+
+
+function theme_d500px_photo($variables) {
+  $size = $variables['size'];
+  $photo_array = $variables['photo_array'];
+  
+  $img = d500px_img($photo_array, $size);
+  $photo_url = d500px_photo_page_url($photo_array['id']);
+  $title = $photo_array['name'];
+  
+  return l($img, $photo_url, array('attributes' => array('title' => $title), 'absolute' => TRUE, 'html' => TRUE)); 
+}
