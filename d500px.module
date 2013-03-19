@@ -73,3 +73,18 @@ function d500px_img($photo_array, $size = 2, $attributes = array()) {
   
   return theme('image', array('path' => $img_url, 'alt' => $title, 'title' => $title, 'attributes' => $attributes, 'getsize' => FALSE));
 }
+
+
+
+
+function d500px_photo_get_sizes(){
+  
+  $d500px_photo_sizes_array = array(
+    0 => array('height' => 70, 'width' => 70),
+    1 => array('height' => 140, 'width' => 140),
+    2 => array('height' => 280, 'width' => 280),
+    3 => array('height' => 600, 'width' => 900),
+  );
+  
+  return $d500px_photo_sizes_array;
+}
