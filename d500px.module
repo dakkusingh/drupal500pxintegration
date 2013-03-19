@@ -55,18 +55,16 @@ function d500px_photo_page_url($photo_id) {
 
 
 
-function d500px_img($photo_array, $size = 2, $attributes = array()) {
+function d500px_img($photo_array, $size = 0, $attributes = array()) {
 
   $d500px_photo_sizes_array = d500px_photo_get_sizes();
   $d500px_photo_size_array = $d500px_photo_sizes_array[$size];
   $attributes['height'] = $d500px_photo_size_array['height']; 
   $attributes['width'] = $d500px_photo_size_array['width'];
 
-  if (empty($attributes['class'])) {
-    $attributes['class'] = NULL;
-  }
-
-  $attributes['class'] = implode(' ', array($attributes['class'], 'd500px_photo'));
+  $attributes['class'][] = 'd500px_photo_size_'. $size;
+  $attributes['class'][] = 'd500px_photo';
+  $attributes['class'] = implode(' ', $attributes['class']);
 
   $img_url = d500px_photo_img($photo_array, $size);
   $title = $photo_array['name'];
