@@ -81,7 +81,27 @@ function d500px_blocks_block_save($delta = '', $edit = array()) {
  * Implements hook_block_view().
  */
 function d500px_blocks_block_view($delta = '') {
-  $block['content'] = d500px_blocks_block_contents($delta);
+  // load up the custom form values for this block
+  $previous_settings = variable_get($delta, array());
+  
+  // nothing to cache
+  if ($previous_settings['d500px_blocks_cache_lifetime'] == 0) {
+    $block['content'] = d500px_blocks_block_contents($delta);  
+  }
+  else { // implement some caching if block option is set to cache
+    // try cache
+    if ($cache = cache_get($delta, 'cache_block')) {
+      $block['content'] = $cache->data;
+    }
+    else {
+      // fetch from fresh
+      $block['content'] = d500px_blocks_block_contents($delta);
+
+      // set cache
+      cache_set($delta, $block['content'], 'cache_block', $previous_settings['d500px_blocks_cache_lifetime']);
+    }    
+  }
+  
   return $block;
 }
 
@@ -91,6 +111,7 @@ function d500px_blocks_block_view($delta = '') {
  * lets generate block contents.
  */
 function d500px_blocks_block_contents($delta) {
+
   $output = array();
 
   $connection = d500px_connection();
@@ -151,6 +172,9 @@ function d500px_blocks_block_commonform($previous_settings) {
 
   $only = '- All -';
   if (isset($previous_settings['only'])) { $only = $previous_settings['only']; }  
+
+  $d500px_blocks_cache_lifetime = 0;
+  if (isset($previous_settings['d500px_blocks_cache_lifetime'])) { $d500px_blocks_cache_lifetime = $previous_settings['d500px_blocks_cache_lifetime']; }  
 
   $form['d500px_blocks_block_common'] = array(
     '#type' => 'fieldset', 
@@ -247,6 +271,23 @@ function d500px_blocks_block_commonform($previous_settings) {
     '#default_value'      => $only,
     '#description'        => t('If you want results from a specific category'),
     //'#required'           => TRUE,
+  );
+
+
+  $form['d500px_blocks_block_caching'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('500px Block Caching'),
+  );
+
+  $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
+  $period[0] = '<' . t('none') . '>';
+
+  $form['d500px_blocks_block_caching']['d500px_blocks_cache_lifetime'] = array(
+    '#type' => 'select',
+    '#title' => t('500px data cache lifetime'),
+    '#default_value' => $d500px_blocks_cache_lifetime,
+    '#options' => $period,
+    '#description' => t('Drupal will cache 500px data for this much time (unless cache is cleared prior to this).')
   );
   
   return $form;
