@@ -95,3 +95,19 @@ function d500px_photo_get_sizes(){
 function d500px_photo_img($photo_array, $size) {
   return $photo_array['image_url'][$size];  
 }
+
+
+
+/**
+ * Implements hook_theme().
+ */
+function d500px_theme() {
+  return array(
+    'd500px_photo' => array(
+      'variables' => array(),
+    ),
+    'd500px_photos' => array(
+      'variables' => array(),
+    ),
+  );
+}
