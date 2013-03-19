@@ -118,10 +118,10 @@ function d500px_blocks_block_contents($delta) {
   }
   
   $content = $connection->call('photos', $params);
-  //dpm($params);
-  dpm($content);
+  //dpm($block_settings);
+  //dpm($content);
   
-  $output['#markup'] = 'this is a dev version of the 500px module and content is yet to be themed';
+  $output['#markup'] = theme('d500px_blocks_photos', array('photos_array' => $content['photos'], 'size' => $block_settings['image_size']));
   
   return $output;
 }
@@ -188,7 +188,7 @@ function d500px_blocks_block_commonform($previous_settings) {
   $form['d500px_blocks_block_common']['image_size'] = array(
     '#type'               => 'select', 
     '#title'              => t('Photo size to display?'),
-    '#options'            => array_combine(range(1,4),range(1,4)),
+    '#options'            => array_combine(range(0,3),range(1,4)),
     '#default_value'      => $image_size,
     '#description'        => t('The photo size to be returned.'),
     '#required'           => TRUE,
@@ -285,6 +285,24 @@ function d500px_blocks_form_d500px_admin_form_alter(&$form, &$form_state, $form_
   );  
   
 }
+
+
+
+
+/**
+ * Implements hook_theme().
+ */
+function d500px_blocks_theme() {
+  return array(
+    'd500px_blocks_photo' => array(
+      'variables' => array(),
+    ),
+    'd500px_blocks_photos' => array(
+      'variables' => array(),
+    ),
+  );
+}
+
 
 
 
