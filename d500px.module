@@ -2,6 +2,7 @@
 
 define ('D500PX_HOST', 'http://500px.com');
 define ('D500PX_API', 'https://api.500px.com');
+define ('D500PX_NSFW', 0);
 
 
 /**
@@ -51,13 +52,13 @@ function d500px_connection() {
 
 
 
-function d500px_photo_page_url($photo_id) {
-  return variable_get('d500px_host', D500PX_HOST) ."/photo/". $photo_id;
+function d500px_photo_page_url($photo_array) {
+  return variable_get('d500px_host', D500PX_HOST) ."/photo/". $photo_array['id'];
 }
 
 
 
-function d500px_img($photo_array, $size = 1, $attributes = array()) {
+function d500px_img($photo_array, $size = 1, $nsfw = 0, $attributes = array()) {
 
   $d500px_photo_sizes_array = d500px_photo_get_sizes();
   $d500px_photo_size_array = $d500px_photo_sizes_array[$size];
@@ -69,7 +70,14 @@ function d500px_img($photo_array, $size = 1, $attributes = array()) {
   $attributes['class'][] = 'd500px_photo';
   $attributes['class'] = implode(' ', $attributes['class']);
 
-  $img_url = d500px_photo_img($photo_array, $size);
+  // if NSFW is set to false and image is SFW
+  if ($nsfw == 0 and $photo_array['nsfw'] == TRUE) {
+    $img_url = drupal_get_path('module', 'd500px') . '/images/nsfw.jpg'; // TODO: this can be done better  
+  }
+  else {
+    $img_url = d500px_photo_img($photo_array, $size);        
+  }
+  
   $title = $photo_array['name'];
   
   return theme('image', array('path' => $img_url, 'alt' => $title, 'title' => $title, 'attributes' => $attributes, 'getsize' => FALSE));
@@ -124,9 +132,11 @@ function theme_d500px_photo($variables) {
 
   $size = $variables['size'];
   $photo_array = $variables['photo_array'];
+  $nsfw = $variables['nsfw'];
+
+  $img = d500px_img($photo_array, $size, $nsfw);
   
-  $img = d500px_img($photo_array, $size);
-  $photo_url = d500px_photo_page_url($photo_array['id']);
+  $photo_url = d500px_photo_page_url($photo_array);
   $title = $photo_array['name'];
   
   return l($img, $photo_url, array('attributes' => array('title' => $title, 'target' => '_blank'), 'absolute' => TRUE, 'html' => TRUE)); 
@@ -142,11 +152,12 @@ function theme_d500px_photos($variables) {
   
   $photos_array = $variables['photos_array'];
   $size = $variables['size'];
+  $nsfw = $variables['nsfw'];
   
   $photos_themed = '';
   
   foreach ($photos_array as $photo_array) {
-    $photos_themed .= theme('d500px_photo', array('photo_array' => $photo_array, 'size' => $size));
+    $photos_themed .= theme('d500px_photo', array('photo_array' => $photo_array, 'size' => $size, 'nsfw' => $nsfw));
   }
   
   return $photos_themed;
