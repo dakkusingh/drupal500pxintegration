@@ -38,6 +38,7 @@ function d500px_menu() {
 }
 
 
+
 function d500px_connection() {
   /* Build D500px object with client credentials. */
   $d500px_consumer_key = variable_get('d500px_consumer_key', '');
@@ -47,6 +48,7 @@ function d500px_connection() {
   
   return $connection;
 }
+
 
 
 function d500px_photo_page_url($photo_id) {
@@ -59,6 +61,7 @@ function d500px_img($photo_array, $size = 1, $attributes = array()) {
 
   $d500px_photo_sizes_array = d500px_photo_get_sizes();
   $d500px_photo_size_array = $d500px_photo_sizes_array[$size];
+  
   $attributes['height'] = $d500px_photo_size_array['height']; 
   $attributes['width'] = $d500px_photo_size_array['width'];
 
@@ -114,6 +117,11 @@ function d500px_theme() {
 
 
 function theme_d500px_photo($variables) {
+
+  if (empty($variables['photo_array'])) {
+    return t('No Image');
+  }
+
   $size = $variables['size'];
   $photo_array = $variables['photo_array'];
   
@@ -128,6 +136,10 @@ function theme_d500px_photo($variables) {
 
 
 function theme_d500px_photos($variables) {
+  if (empty($variables['photos_array'])) {
+    return t('No Images');
+  }
+  
   $photos_array = $variables['photos_array'];
   $size = $variables['size'];
   
