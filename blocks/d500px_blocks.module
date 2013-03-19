@@ -349,8 +349,7 @@ function d500px_blocks_theme() {
 function theme_d500px_blocks_photo($variables) { 
   $linked_image = theme('d500px_photo', $variables);
   
-  $output = '';
-  $output .= "<div class='d500px-photo'>";
+  $output = "<div class='d500px-photo'>";
   $output .= $linked_image;
   $output .= "</div>"; 
   
@@ -362,8 +361,7 @@ function theme_d500px_blocks_photo($variables) {
 function theme_d500px_blocks_photos($variables) {
   $photos_themed = theme('d500px_photos', $variables);
   
-  $output = '';
-  $output .= "<div class='d500px-photos'>";
+  $output = "<div class='d500px-photos'>";
   $output .= $photos_themed;
   $output .= '</div>';
   
