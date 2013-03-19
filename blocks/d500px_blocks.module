@@ -140,7 +140,7 @@ function d500px_blocks_block_commonform($previous_settings) {
   $rpp = 20;
   if (isset($previous_settings['rpp'])) { $rpp = $previous_settings['rpp']; }  
   
-  $image_size = array(2 => 1);
+  $image_size = 1;
   if (isset($previous_settings['image_size'])) { $image_size = $previous_settings['image_size']; }
   
   $feature = 'fresh_today';
@@ -187,8 +187,8 @@ function d500px_blocks_block_commonform($previous_settings) {
 
   $form['d500px_blocks_block_common']['image_size'] = array(
     '#type'               => 'select', 
-    '#title'              => t('Photo size to display?'),
-    '#options'            => array_combine(range(0,3),range(1,4)),
+    '#title'              => t('Thumbnail size:'),
+    '#options'            => array(0 => '70px', 1 => '140px', 2 => '280px'),
     '#default_value'      => $image_size,
     '#description'        => t('The photo size to be returned.'),
     '#required'           => TRUE,

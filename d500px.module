@@ -55,7 +55,7 @@ function d500px_photo_page_url($photo_id) {
 
 
 
-function d500px_img($photo_array, $size = 0, $attributes = array()) {
+function d500px_img($photo_array, $size = 1, $attributes = array()) {
 
   $d500px_photo_sizes_array = d500px_photo_get_sizes();
   $d500px_photo_size_array = $d500px_photo_sizes_array[$size];
