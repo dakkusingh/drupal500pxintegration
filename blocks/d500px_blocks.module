@@ -39,7 +39,7 @@ function d500px_blocks_block_info() {
     }
     
     $blocks[$delta] = array(
-      'info' => $title,
+      'info'  => $title,
       'cache' => DRUPAL_NO_CACHE,
     );
   }  
@@ -126,10 +126,10 @@ function d500px_blocks_block_contents($delta) {
   }
   
   $params = array(
-    'feature' => $block_settings['feature'], 
-    'rpp' => $block_settings['rpp'],
-    'image_size[]' => range(1, 4), // better to get all sizes and deal with requested size at theme level
-    'sort' => $block_settings['sort'],
+    'feature'       => $block_settings['feature'], 
+    'rpp'           => $block_settings['rpp'],
+    'image_size[]'  => range(1, 4), // better to get all sizes and deal with requested size at theme level
+    'sort'          => $block_settings['sort'],
   );
   
   // add category if its not all
@@ -189,10 +189,10 @@ function d500px_blocks_block_commonform($previous_settings) {
   if (isset($previous_settings['sort'])) { $sort = $previous_settings['sort']; }  
 
   $form['d500px_blocks_block_common'] = array(
-    '#type' => 'fieldset', 
-    '#title' => t('500px Block Settings'), 
-    '#collapsible' => FALSE, 
-    '#collapsed' => FALSE,
+    '#type'               => 'fieldset', 
+    '#title'              => t('500px Block Settings'), 
+    '#collapsible'        => FALSE, 
+    '#collapsed'          => FALSE,
   );
 
   $form['d500px_blocks_block_common']['feature'] = array(
@@ -226,7 +226,7 @@ function d500px_blocks_block_commonform($previous_settings) {
     '#type'               => 'checkbox', 
     '#title'              => t('Display NSFW photos?'),
     '#default_value'      => $nsfw,
-    '#description'        => t('Some photos on 500px are "Not Safe For Work", use with care.'),
+    '#description'        => t('Some photos on 500px are "Not Safe For Work" (or children), use with care. By default all NSFW images will be blacked out.'),
   );  
 
   $form['d500px_blocks_block_common']['username'] = array(
@@ -258,19 +258,19 @@ function d500px_blocks_block_commonform($previous_settings) {
 
 
   $form['d500px_blocks_block_caching'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('500px Block Caching'),
+    '#type'               => 'fieldset',
+    '#title'              => t('500px Block Caching'),
   );
 
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
   $period[0] = '<' . t('none') . '>';
 
   $form['d500px_blocks_block_caching']['d500px_blocks_cache_lifetime'] = array(
-    '#type' => 'select',
-    '#title' => t('500px data cache lifetime'),
-    '#default_value' => $d500px_blocks_cache_lifetime,
-    '#options' => $period,
-    '#description' => t('Drupal will cache 500px data for this much time (unless cache is cleared prior to this).')
+    '#type'               => 'select',
+    '#title'              => t('500px data cache lifetime'),
+    '#default_value'      => $d500px_blocks_cache_lifetime,
+    '#options'            => $period,
+    '#description'        => t('Drupal will cache 500px data for this much time (unless cache is cleared prior to this).')
   );
   
   return $form;
@@ -293,19 +293,19 @@ function d500px_blocks_block_commonform_username_validate($element, &$form_state
 function d500px_blocks_form_d500px_admin_form_alter(&$form, &$form_state, $form_id) {
 
   $form['d500px_blocks'] = array(
-    '#type' => 'fieldset', 
-    '#title' => t('500px Block Config'), 
-    '#collapsible' => FALSE, 
-    '#collapsed' => FALSE,
+    '#type'             => 'fieldset', 
+    '#title'            => t('500px Block Config'), 
+    '#collapsible'      => FALSE, 
+    '#collapsed'        => FALSE,
   );
 
   $form['d500px_blocks']['d500px_blocks_number_blocks'] = array(
-    '#type'               => 'select', 
-    '#title'              => t('Number of blocks required?'),
-    '#options'            => array_combine(range(1,20),range(1,20)),
-    '#default_value'      => variable_get('d500px_blocks_number_blocks', 1),
-    '#description'        => t('The number of blocks can be increased or decreased at any time. Default is 1 block.'),
-    //'#required'           => TRUE,
+    '#type'             => 'select', 
+    '#title'            => t('Number of blocks required?'),
+    '#options'          => array_combine(range(1,20),range(1,20)),
+    '#default_value'    => variable_get('d500px_blocks_number_blocks', 1),
+    '#description'      => t('The number of blocks can be increased or decreased at any time. Default is 1 block.'),
+    //'#required'         => TRUE,
   );  
   
 }
