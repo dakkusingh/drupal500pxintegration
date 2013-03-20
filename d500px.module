@@ -72,7 +72,7 @@ function d500px_img($photo_array, $size = 1, $nsfw = 0, $attributes = array()) {
 
   // if NSFW is set to false and image is SFW
   if ($nsfw == 0 and $photo_array['nsfw'] == TRUE) {
-    $img_url = drupal_get_path('module', 'd500px') . '/images/nsfw.jpg'; // TODO: this can be done better  
+    $img_url = drupal_get_path('module', 'd500px') . '/images/nsfw.png'; // TODO: this can be done better  
   }
   else {
     $img_url = d500px_photo_img($photo_array, $size);        
