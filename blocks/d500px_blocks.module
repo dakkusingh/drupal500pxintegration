@@ -142,10 +142,15 @@ function d500px_blocks_block_contents($delta) {
     $params += array('username' => $block_settings['username']);
   }
   
+  // get some pics
   $content = $connection->call('photos', $params);
-  //dpm($params);
-  //dpm($content);
   
+  // check if there are any photos firstly
+  if (empty($content['photos'])) {
+    return $output['#markup'] = t('No pictures were found');
+  }
+  
+  // so we have some content, display that  
   $output['#markup'] = theme('d500px_blocks_photos', array('photos_array' => $content['photos'], 'size' => $block_settings['image_size'], 'nsfw' => $block_settings['nsfw']));
   
   return $output;
@@ -193,15 +198,7 @@ function d500px_blocks_block_commonform($previous_settings) {
   $form['d500px_blocks_block_common']['feature'] = array(
     '#type'               => 'select', 
     '#title'              => t('Photo stream to be retrieved?'),
-    '#options'            => array(
-                                    "popular" => t("Popular"),
-                                    "upcoming" => t("Upcoming"),
-                                    "editors" => t("Editors' Choice"),
-                                    "fresh_today" => t("Fresh Today"),
-                                    "fresh_yesterday" => t("Fresh Yesterday"),
-                                    "fresh_week" => t("Fresh This Week"),
-                                    "user" => t("User"),
-                             ),
+    '#options'            => d500px_available_features(),
     '#default_value'      => $feature,
     '#description'        => t('Photo stream to be retrieved. Default fresh_today.'),
     //'#required'           => TRUE,
@@ -244,37 +241,7 @@ function d500px_blocks_block_commonform($previous_settings) {
   $form['d500px_blocks_block_common']['only'] = array(
     '#type'               => 'select', 
     '#title'              => t('Photo Category'),
-    '#options'            => array(
-                                    '- All -' => '- All -',
-                                    'Abstract'  => 'Abstract',
-                                    'Animals'  => 'Animals',
-                                    'Black and White'   => 'Black and White',
-                                    'Celebrities'   => 'Celebrities',
-                                    'City and Architecture'   => 'City and Architecture',
-                                    'Commercial'  => 'Commercial',
-                                    'Concert'  => 'Concert',
-                                    'Family'  => 'Family',
-                                    'Fashion'  => 'Fashion',
-                                    'Film'  => 'Film',
-                                    'Fine Art'  => 'Fine Art',
-                                    'Food'  => 'Food',
-                                    'Journalism'   => 'Journalism',
-                                    'Landscapes'   => 'Landscapes',
-                                    'Macro'  => 'Macro',
-                                    'Nature'  => 'Nature',
-                                    'Nude'  => 'Nude',
-                                    'People'  => 'People',
-                                    'Performing Arts'  => 'Performing Arts',
-                                    'Sport'  => 'Sport',
-                                    'Still Life'   => 'Still Life',
-                                    'Street'  => 'Street',
-                                    'Transporation'  => 'Transporation',
-                                    'Travel'  => 'Travel',
-                                    'Underwater'  => 'Underwater',
-                                    'Urban Exploration'  => 'Urban Exploration',                                    
-                                    'Wedding'  => 'Wedding',    
-                                    'Uncategorized'   => 'Uncategorized',
-                             ),
+    '#options'            => d500px_available_categories(),
     '#default_value'      => $only,
     '#description'        => t('If you want results from a specific category'),
     //'#required'           => TRUE,
@@ -283,15 +250,7 @@ function d500px_blocks_block_commonform($previous_settings) {
   $form['d500px_blocks_block_common']['sort'] = array(
     '#type'               => 'select', 
     '#title'              => t('Sort photos in the specified order'),
-    '#options'            => array(
-                                  'created_at' => 'Time of upload, most recent first',
-                                  'rating' => 'Rating, highest rated first',
-                                  'times_viewed' => 'View count, most viewed first',
-                                  'votes_count' => 'Votes count, most voted first',
-                                  'favorites_count' => 'Favorites count, most favorited first',
-                                  'comments_count' => 'Comments count, most commented first',
-                                  'taken_at' => 'Metadata date, most recent first',
-                             ),
+    '#options'            => d500px_available_sort_options(),
     '#default_value'      => $sort,
     '#description'        => t('Sort photos in the specified order'),
     //'#required'           => TRUE,
