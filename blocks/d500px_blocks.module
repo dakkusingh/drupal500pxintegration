@@ -226,7 +226,7 @@ function d500px_blocks_block_commonform($previous_settings) {
     '#type'               => 'checkbox', 
     '#title'              => t('Display NSFW photos?'),
     '#default_value'      => $nsfw,
-    '#description'        => t('Some photos are Not Safe For Work, use with care.'),
+    '#description'        => t('Some photos on 500px are "Not Safe For Work", use with care.'),
   );  
 
   $form['d500px_blocks_block_common']['username'] = array(
