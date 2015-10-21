@@ -1,11 +1,5 @@
 <?php
-
-/**
- * Exception handling class.
- */
-class D500pxException extends Exception {}
-
-
+namespace Drupal\d500px;
 
 /**
  * Primary 500px API implementation class
@@ -36,20 +30,13 @@ class D500px {
 
 
   public function get_request_token() {
-    // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/d500px.settings.yml and config/schema/d500px.schema.yml.
-$url = \Drupal::config('d500px.settings')->get('d500px_api') . '/v1/oauth/request_token';
+    $url = variable_get('d500px_api', D500PX_API) . '/v1/oauth/request_token';
     try {
-      // @FIXME
-// url() expects a route name or an external URI.
-// $params = array('oauth_callback' => url('d500px/oauth', array('absolute' => TRUE)));
-
+      $params = array('oauth_callback' => url('d500px/oauth', array('absolute' => TRUE)));
       $response = $this->auth_request($url, $params);
     }
     catch (D500pxException $e) {
-      \Drupal::logger('D500px')->error('!message', array('!message' => $e->__toString()));
+      watchdog('D500px', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
       return FALSE;
     }
     parse_str($response, $token);
@@ -59,11 +46,7 @@ $url = \Drupal::config('d500px.settings')->get('d500px_api') . '/v1/oauth/reques
 
 
   public function get_authorize_url($token) {
-    // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/d500px.settings.yml and config/schema/d500px.schema.yml.
-$url = \Drupal::config('d500px.settings')->get('d500px_api') . '/v1/oauth/authorize';
+    $url = variable_get('d500px_api', D500PX_API) . '/v1/oauth/authorize';
     $url.= '?oauth_token=' . $token['oauth_token'];
 
     return $url;
@@ -71,11 +54,7 @@ $url = \Drupal::config('d500px.settings')->get('d500px_api') . '/v1/oauth/author
   
   
   public function get_authenticate_url($token) {
-    // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/d500px.settings.yml and config/schema/d500px.schema.yml.
-$url = \Drupal::config('d500px.settings')->get('d500px_api') . '/v1/oauth/authenticate';
+    $url = variable_get('d500px_api', D500PX_API) . '/v1/oauth/authenticate';
     $url.= '?oauth_token=' . $token['oauth_token'];
 
     return $url;
@@ -83,16 +62,12 @@ $url = \Drupal::config('d500px.settings')->get('d500px_api') . '/v1/oauth/authen
   
   
   public function get_access_token() {
-    // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/d500px.settings.yml and config/schema/d500px.schema.yml.
-$url = \Drupal::config('d500px.settings')->get('d500px_api') . '/v1/oauth/access_token';
+    $url = variable_get('d500px_api', D500PX_API) . '/v1/oauth/access_token';
     try {
       $response = $this->auth_request($url);
     }
     catch (D500pxException $e) {
-      \Drupal::logger('D500px')->error('!message', array('!message' => $e->__toString()));
+      watchdog('D500px', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
       return FALSE;
     }
     parse_str($response, $token);
@@ -168,15 +143,7 @@ $url = \Drupal::config('d500px.settings')->get('d500px_api') . '/v1/oauth/access
    *   stdClass response object.
    */
   protected function doRequest($url, $headers, $method, $data) {
-    // @FIXME
-// drupal_http_request() has been replaced by the Guzzle HTTP client, which is bundled
-// with Drupal core.
-// 
-// 
-// @see https://www.drupal.org/node/1862446
-// @see http://docs.guzzlephp.org/en/latest
-// return drupal_http_request($url, array('headers' => $headers, 'method' => $method, 'data' => $data));
-
+    return drupal_http_request($url, array('headers' => $headers, 'method' => $method, 'data' => $data));
   }  
 
 
@@ -197,11 +164,7 @@ $url = \Drupal::config('d500px.settings')->get('d500px_api') . '/v1/oauth/access
    *   The complete path to the endpoint.
    */
   protected function create_url($path) {
-    // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/d500px.settings.yml and config/schema/d500px.schema.yml.
-$url =  \Drupal::config('d500px.settings')->get('d500px_api') .'/v1/'. $path;
+    $url =  variable_get('d500px_api', D500PX_API) .'/v1/'. $path;
     return $url;
   }
 
@@ -220,7 +183,7 @@ $url =  \Drupal::config('d500px.settings')->get('d500px_api') .'/v1/'. $path;
       $response = $this->auth_request($url, $params, $method);
     }
     catch (D500pxException $e) {
-      \Drupal::logger('D500px')->error('!message', array('!message' => $e->__toString()));
+      watchdog('D500px', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
       return FALSE;
     }
 

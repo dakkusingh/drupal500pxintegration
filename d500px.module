@@ -42,8 +42,8 @@ function d500px_menu() {
 
 function d500px_connection() {
   /* Build D500px object with client credentials. */
-  $d500px_consumer_key = variable_get('d500px_consumer_key', '');
-  $d500px_consumer_secret = variable_get('d500px_consumer_secret', '');
+  $d500px_consumer_key = \Drupal::config('d500px.settings')->get('d500px_consumer_key');
+  $d500px_consumer_secret = \Drupal::config('d500px.settings')->get('d500px_consumer_secret');
   
   $connection = new D500px($d500px_consumer_key, $d500px_consumer_secret);
   
@@ -53,7 +53,11 @@ function d500px_connection() {
 
 
 function d500px_photo_page_url($photo_array) {
-  return variable_get('d500px_host', D500PX_HOST) ."/photo/". $photo_array['id'];
+  // @FIXME
+// Could not extract the default value because it is either indeterminate, or
+// not scalar. You'll need to provide a default value in
+// config/install/d500px.settings.yml and config/schema/d500px.schema.yml.
+return \Drupal::config('d500px.settings')->get('d500px_host') ."/photo/". $photo_array['id'];
 }
 
 
@@ -80,7 +84,16 @@ function d500px_img($photo_array, $size = 1, $nsfw = 0, $attributes = array()) {
   
   $title = $photo_array['name'];
   
-  return theme('image', array('path' => $img_url, 'alt' => $title, 'title' => $title, 'attributes' => $attributes, 'getsize' => FALSE));
+  // @FIXME
+// theme() has been renamed to _theme() and should NEVER be called directly.
+// Calling _theme() directly can alter the expected output and potentially
+// introduce security issues (see https://www.drupal.org/node/2195739). You
+// should use renderable arrays instead.
+// 
+// 
+// @see https://www.drupal.org/node/2195739
+// return theme('image', array('path' => $img_url, 'alt' => $title, 'title' => $title, 'attributes' => $attributes, 'getsize' => FALSE));
+
 }
 
 
@@ -139,7 +152,10 @@ function theme_d500px_photo($variables) {
   $photo_url = d500px_photo_page_url($photo_array);
   $title = $photo_array['name'];
   
-  return l($img, $photo_url, array('attributes' => array('title' => $title, 'target' => '_blank'), 'absolute' => TRUE, 'html' => TRUE)); 
+  // @FIXME
+// l() expects a Url object, created from a route name or external URI.
+// return l($img, $photo_url, array('attributes' => array('title' => $title, 'target' => '_blank'), 'absolute' => TRUE, 'html' => TRUE));
+ 
 }
 
 
@@ -157,7 +173,16 @@ function theme_d500px_photos($variables) {
   $photos_themed = '';
   
   foreach ($photos_array as $photo_array) {
-    $photos_themed .= theme('d500px_photo', array('photo_array' => $photo_array, 'size' => $size, 'nsfw' => $nsfw));
+    // @FIXME
+// theme() has been renamed to _theme() and should NEVER be called directly.
+// Calling _theme() directly can alter the expected output and potentially
+// introduce security issues (see https://www.drupal.org/node/2195739). You
+// should use renderable arrays instead.
+// 
+// 
+// @see https://www.drupal.org/node/2195739
+// $photos_themed .= theme('d500px_photo', array('photo_array' => $photo_array, 'size' => $size, 'nsfw' => $nsfw));
+
   }
   
   return $photos_themed;
