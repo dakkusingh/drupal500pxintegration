@@ -1,8 +1,0 @@
-d500px.settings:
-  type: mapping
-  label: Settings
-  mapping:
-    d500px_consumer_key:
-      type: string
-    d500px_consumer_secret:
-      type: string

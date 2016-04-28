@@ -1,5 +1,0 @@
-name = 500px Blocks
-description = 500px Content Blocks.
-package = 500px
-core = 7.x
-dependencies[] = d500px

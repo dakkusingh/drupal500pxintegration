@@ -1,6 +1,0 @@
-d500px_blocks.settings:
-  type: mapping
-  label: Settings
-  mapping:
-    d500px_blocks_number_blocks:
-      type: integer
