@@ -18,8 +18,10 @@ class D500px {
    */
   public function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
     $this->config = \Drupal::config('d500px.settings');
+
     $this->signature_method = new OAuthSignatureMethod_HMAC_SHA1();
     $this->consumer = new OAuthConsumer($consumer_key, $consumer_secret);
+
     if (!empty($oauth_token) && !empty($oauth_token_secret)) {
       $this->token = new OAuthConsumer($oauth_token, $oauth_token_secret);
     }
@@ -33,7 +35,6 @@ class D500px {
   }
 
   public function getRequestToken() {
-    $config = $this->config;
     $url = $this->request_token_url;
 
     try {
