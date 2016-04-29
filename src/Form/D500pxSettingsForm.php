@@ -7,6 +7,7 @@
 
 namespace Drupal\d500px\Form;
 
+
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -27,14 +28,21 @@ class D500pxSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return [
+      'd500px.settings',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('d500px.config');
+    $config = $this->config('d500px.settings');
 
     $form['oauth'] = array(
       '#type' => 'fieldset',
       '#title' => t('OAuth Settings'),
-      '#access' => Drupal::moduleHandler()->moduleExists('oauth_common')),
-      '#description' => t('To enable OAuth based access for 500px, you must <a href="@url">register your application</a> with 500px and add the provided keys here.', array('@url' => 'http://developers.500px.com/settings/applications?from=developers')),
     );
 
     // @todo was this ever used?
@@ -58,7 +66,6 @@ class D500pxSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('d500px_consumer_secret'),
     );
 
-    // 500px external APIs settings.
     $form['d500px'] = array(
       '#type' => 'fieldset',
       '#title' => t('500px Settings'),
@@ -77,7 +84,7 @@ class D500pxSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('d500px_api'),
     );
 
-    return $form;
+    return parent::buildForm($form, $form_state);
   }
 
   /**
@@ -86,10 +93,10 @@ class D500pxSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
     $this->config('d500px.settings')
-      ->set('d500px_consumer_key', $form_state['values']['d500px_consumer_key'])
-      ->set('d500px_consumer_secret', $form_state['values']['d500px_consumer_secret'])
-      ->set('d500px_host', $form_state['values']['d500px_host'])
-      ->set('d500px_api', $form_state['values']['d500px_api'])
+      ->set('d500px_consumer_key', $form_state->getValue['d500px_consumer_key'])
+      ->set('d500px_consumer_secret', $form_state->getValue['d500px_consumer_secret'])
+      ->set('d500px_host', $form_state->getValue['d500px_host'])
+      ->set('d500px_api', $form_state->getValue['d500px_api'])
       ->save();
 
     parent::submitForm($form, $form_state);
