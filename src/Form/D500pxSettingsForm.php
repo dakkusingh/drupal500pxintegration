@@ -93,10 +93,10 @@ class D500pxSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
     $this->config('d500px.settings')
-      ->set('d500px_consumer_key', $form_state->getValue['d500px_consumer_key'])
-      ->set('d500px_consumer_secret', $form_state->getValue['d500px_consumer_secret'])
-      ->set('d500px_host', $form_state->getValue['d500px_host'])
-      ->set('d500px_api', $form_state->getValue['d500px_api'])
+      ->set('d500px_consumer_key', $form_state->getValue('d500px_consumer_key'))
+      ->set('d500px_consumer_secret', $form_state->getValue('d500px_consumer_secret'))
+      ->set('d500px_host', $form_state->getValue('d500px_host'))
+      ->set('d500px_api', $form_state->getValue('d500px_api'))
       ->save();
 
     parent::submitForm($form, $form_state);
