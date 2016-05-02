@@ -42,7 +42,8 @@ class D500px {
       $response = $this->authRequest($url, $params);
     }
     catch (Exception $e) {
-      watchdog('D500px', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
+      //watchdog('D500px', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
+      \Drupal::logger('D500px')->error($e->__toString());
       return FALSE;
     }
     parse_str($response, $token);
@@ -70,7 +71,8 @@ class D500px {
       $response = $this->authRequest($url);
     }
     catch (Exception $e) {
-      watchdog('D500px', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
+      //watchdog('D500px', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
+      \Drupal::logger('D500px')->error($e->__toString());
       return FALSE;
     }
 
@@ -146,6 +148,28 @@ class D500px {
    *   stdClass response object.
    */
   protected function doRequest($url, $headers, $method, $data) {
+    // @todo replace drupal_http_request()
+    /*
+    $client = \Drupal::httpClient();
+    $request = $client->createRequest('GET', $feed->url);
+    $request->addHeader('If-Modified-Since', gmdate(DATE_RFC1123, $last_fetched));
+
+    try {
+      $response = $client->get($feed->uri, [
+        'headers' => [
+          'If-Modified-Since' => gmdate(DATE_RFC1123, $last_fetched),
+        ],
+      ]);
+      // Expected result.
+      // getBody() returns an instance of Psr\Http\Message\StreamInterface.
+      // @see http://docs.guzzlephp.org/en/latest/psr7.html#body
+      $data = $response->getBody();
+    }
+    catch (RequestException $e) {
+      watchdog_exception('my_module', $e);
+    }
+    */
+
     return drupal_http_request($url, array('headers' => $headers, 'method' => $method, 'data' => $data));
   }
 
@@ -180,7 +204,8 @@ class D500px {
       $response = $this->authRequest($url, $params, $method);
     }
     catch (Exception $e) {
-      watchdog('D500px', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
+      //watchdog('D500px', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
+      \Drupal::logger('D500px')->error($e->__toString());
       return FALSE;
     }
 
