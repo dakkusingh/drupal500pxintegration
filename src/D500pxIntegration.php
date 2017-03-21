@@ -9,6 +9,11 @@
 namespace Drupal\D500px;
 
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Url;
+
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 /**
  * Primary 500px API implementation class
@@ -34,21 +39,14 @@ class D500pxIntegration {
   /**
    * Constructor for the 500px class
    */
-   public function __construct(ConfigFactory $config_factory) {
-     $this->config_factory = $config_factory;
-     $config = $config_factory->get('d500px.settings');
+  public function __construct(ConfigFactory $config_factory) {
+    $this->config_factory = $config_factory;
+    $config = $config_factory->get('d500px.settings');
 
+    $consumer_key = 'HDYoibKfCYC3MMylaZ9PCh3U9TeLE6NblQN53WtI';
+    $consumer_secret = 'sXgBYV7zxy8XvJRkk78MaUzS9k2YRzTRVcFth5VC';
 
-    ksm($config);
-
-    //$this->signature_method = new OAuthSignatureMethod_HMAC_SHA1();
-    //$this->consumer = new OAuthConsumer($consumer_key, $consumer_secret);
-
-    //if (!empty($oauth_token) && !empty($oauth_token_secret)) {
-      //$this->token = new OAuthConsumer($oauth_token, $oauth_token_secret);
-    //}
-
-    // @todo create all urls here
+    $this->consumer = new \OAuth($consumer_key, $consumer_secret);
     $this->request_token_url = $config->get('d500px_api') . '/v1/oauth/request_token';
     $this->authorize_url = $config->get('d500px_api') . '/v1/oauth/authorize';
     $this->authenticate_url = $config->get('d500px_api') . '/v1/oauth/authenticate';
@@ -56,20 +54,54 @@ class D500pxIntegration {
     $this->generic_url = $config->get('d500px_api') . '/v1/';
   }
 
+public function getRequestToken3() {
+  $accessToken = 'HDYoibKfCYC3MMylaZ9PCh3U9TeLE6NblQN53WtI';
+  $consumer_secret = 'sXgBYV7zxy8XvJRkk78MaUzS9k2YRzTRVcFth5VC';
+
+  $client = new Client([
+    'base_uri' => $this->generic_url,
+    //'handler' => $stack,
+  ]);
+
+  $request = $client->post('/v1/oauth/request_token');
+  $request->addHeader('Authorization', 'oauth_consumer_key=' .$accessToken);
+  $request->addHeader('Authorization', 'oauth_token=' .$consumer_secret);
+  $request->addHeader('Authorization', 'oauth_nonce=2672821620');
+
+  $response = $request->send();
+  echo $response->getBody();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   public function getRequestToken() {
     $url = $this->request_token_url;
 
     try {
-      $params = array('oauth_callback' => url('d500px/oauth', array('absolute' => TRUE)));
+      $url = Url::fromUserInput('/d500px/oauth', array('absolute' => TRUE))->toString();
+      $params = array('oauth_callback' => $url);
       $response = $this->authRequest($url, $params);
     }
     catch (Exception $e) {
-      //watchdog('D500px', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
       \Drupal::logger('D500px')->error($e->__toString());
       return FALSE;
     }
     parse_str($response, $token);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+    $this->token = new \OAuth($token['oauth_token'], $token['oauth_token_secret']);
     return $token;
   }
 
@@ -93,7 +125,6 @@ class D500pxIntegration {
       $response = $this->authRequest($url);
     }
     catch (Exception $e) {
-      //watchdog('D500px', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
       \Drupal::logger('D500px')->error($e->__toString());
       return FALSE;
     }
