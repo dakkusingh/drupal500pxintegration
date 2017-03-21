@@ -12,7 +12,7 @@ use Drupal\d500px\D500px;
 class d500pxdemo extends ControllerBase {
   public function mainPage() {
     $foo = \Drupal::service('d500px.d500pxintegration');
-    ksm($foo->getRequestToken3());
+    ksm($foo->get('photos', array()));
     return [
         '#markup' => $this->t('Something goes here!'),
     ];

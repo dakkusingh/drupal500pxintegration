@@ -7,27 +7,34 @@
  */
 
 namespace Drupal\D500px;
-
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Url;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 /**
  * Primary 500px API implementation class
  * @package Drupal\D500px
  */
 class D500pxIntegration {
+  // Inspired by
+  // https://github.com/dcousineau/twitteroauth/blob/master/src/Johntron/TwitterOAuth.php 
 
-  /**
-   * @var $source the 500px api 'source'
-   */
-  protected $source = 'drupal';
-  protected $signature_method;
-  protected $consumer;
-  protected $token;
+  /* Respons format. */
+	public $format = 'json';
+
+  /* Decode returned json data. */
+	public $decode_json = true;
+
+	/* Set the useragent. */
+	public $useragent = 'PHP500pxOAuth';
+
+	/* Immediately retry the API call if the response was not successful. */
+	public $retry = true;
+
+	/* Number of times to retry the API call if the response was not successful. */
+	public $retryAttempts = 3;
+
+	/* Number of times the current request has been retried. */
+	public $currentRetries = 0;
 
   /**
    * Drupal\Core\Config\ConfigFactory definition.
@@ -39,14 +46,27 @@ class D500pxIntegration {
   /**
    * Constructor for the 500px class
    */
-  public function __construct(ConfigFactory $config_factory) {
+  public function __construct(ConfigFactory $config_factory, $oauth_token = null, $oauth_token_secret = null) {
     $this->config_factory = $config_factory;
     $config = $config_factory->get('d500px.settings');
 
-    $consumer_key = 'HDYoibKfCYC3MMylaZ9PCh3U9TeLE6NblQN53WtI';
-    $consumer_secret = 'sXgBYV7zxy8XvJRkk78MaUzS9k2YRzTRVcFth5VC';
+    $this->consumer = new \OAuth(
+			$config->get('d500px_consumer_key'),
+			$config->get('d500px_consumer_secret'),
+			OAUTH_SIG_METHOD_HMACSHA1,
+			OAUTH_AUTH_TYPE_AUTHORIZATION // go for the gold!
+		);
 
-    $this->consumer = new \OAuth($consumer_key, $consumer_secret);
+		$this->consumer->setRequestEngine(OAUTH_REQENGINE_STREAMS); // we don't need curl
+
+    if (!empty($oauth_token) && !empty($oauth_token_secret)) {
+			$this->consumer->setToken($oauth_token, $oauth_token_secret);
+			$this->token = array($oauth_token, $oauth_token_secret);
+		}
+    else {
+			$this->token = null;
+		}
+
     $this->request_token_url = $config->get('d500px_api') . '/v1/oauth/request_token';
     $this->authorize_url = $config->get('d500px_api') . '/v1/oauth/authorize';
     $this->authenticate_url = $config->get('d500px_api') . '/v1/oauth/authenticate';
@@ -54,219 +74,169 @@ class D500pxIntegration {
     $this->generic_url = $config->get('d500px_api') . '/v1/';
   }
 
-public function getRequestToken3() {
-  $accessToken = 'HDYoibKfCYC3MMylaZ9PCh3U9TeLE6NblQN53WtI';
-  $consumer_secret = 'sXgBYV7zxy8XvJRkk78MaUzS9k2YRzTRVcFth5VC';
-
-  $client = new Client([
-    'base_uri' => $this->generic_url,
-    //'handler' => $stack,
-  ]);
-
-  $request = $client->post('/v1/oauth/request_token');
-  $request->addHeader('Authorization', 'oauth_consumer_key=' .$accessToken);
-  $request->addHeader('Authorization', 'oauth_token=' .$consumer_secret);
-  $request->addHeader('Authorization', 'oauth_nonce=2672821620');
-
-  $response = $request->send();
-  echo $response->getBody();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  public function getRequestToken() {
-    $url = $this->request_token_url;
-
-    try {
-      $url = Url::fromUserInput('/d500px/oauth', array('absolute' => TRUE))->toString();
-      $params = array('oauth_callback' => $url);
-      $response = $this->authRequest($url, $params);
-    }
-    catch (Exception $e) {
-      \Drupal::logger('D500px')->error($e->__toString());
-      return FALSE;
-    }
-    parse_str($response, $token);
-    $this->token = new \OAuth($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
-  }
-
-  public function getAuthorizeUrl($token) {
-    $url = $this->authorize_url;
-    $url .= '?oauth_token=' . $token['oauth_token'];
-
-    return $url;
-  }
-
-  public function getAuthenticateUrl($token) {
-    $url = $this->authenticate_url;
-    $url .= '?oauth_token=' . $token['oauth_token'];
-
-    return $url;
-  }
-
-  public function getAccessToken() {
-    $url = $this->access_token_url;
-    try {
-      $response = $this->authRequest($url);
-    }
-    catch (Exception $e) {
-      \Drupal::logger('D500px')->error($e->__toString());
-      return FALSE;
-    }
-
-    parse_str($response, $token);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
-  }
 
   /**
-   * Performs an authenticated request.
-   */
-  public function authRequest($url, $params = array(), $method = 'GET') {
-    $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $params);
-    $request->sign_request($this->signature_method, $this->consumer, $this->token);
-
-    switch ($method) {
-      case 'GET':
-        return $this->request($request->to_url());
-
-      case 'POST':
-        return $this->request($request->get_normalized_http_url(), $request->get_parameters(), 'POST');
-    }
-  }
+	 * Set access token and secret
+	 */
+	public function setToken($token, $secret) {
+		$this->consumer->setToken($token, $secret);
+	}
 
   /**
-   * Performs a request.
-   *
-   * @throws Exception
-   */
-  protected function request($url, $params = array(), $method = 'GET') {
-    $data = '';
-    if (count($params) > 0) {
-      if ($method == 'GET') {
-        $url .= '?' . http_build_query($params, '', '&');
-      }
-      else {
-        $data = http_build_query($params, '', '&');
-      }
-    }
+	 * Get a request_token from Twitter
+	 *
+	 * @return array a key/value array containing oauth_token and oauth_token_secret
+	 */
+	public function getRequestToken($oauth_callback = null) {
+		$this->token = $this->consumer->getRequestToken(
+			$this->request_token_url,
+			$oauth_callbacka
+		);
 
-    $headers = array();
-    $headers['Authorization'] = 'Oauth';
-    $headers['Content-type'] = 'application/x-www-form-urlencoded';
-    $response = $this->doRequest($url, $headers, $method, $data);
-
-    if (!isset($response->error)) {
-      return $response->data;
-    }
-    else {
-      $error = $response->error;
-      $data = $this->parseResponse($response->data);
-      if (isset($data['error'])) {
-        $error = $data['error'];
-      }
-      throw new Exception($error);
-    }
-  }
+		return $this->token;
+	}
 
   /**
-   * Actually performs a request.
-   *
-   * This method can be easily overriden through inheritance.
-   *
-   * @param string $url
-   *   The url of the endpoint.
-   * @param array $headers
-   *   Array of headers.
-   * @param string $method
-   *   The HTTP method to use (normally POST or GET).
-   * @param array $data
-   *   An array of parameters
-   * @return
-   *   stdClass response object.
-   */
-  protected function doRequest($url, $headers, $method, $data) {
-    // @todo replace drupal_http_request()
-    /*
-    $client = \Drupal::httpClient();
-    $request = $client->createRequest('GET', $feed->url);
-    $request->addHeader('If-Modified-Since', gmdate(DATE_RFC1123, $last_fetched));
+	 * Returns the last response info from the oauth client
+	 * If available, also adds in the following custom headers:
+	 *     `'status_code'`
+	 *     `'status_message'`
+	 *     `'remaining_hits'`: for rate limiting
+	 *     `'reset_time_in_seconds'`: when the rate limit resets
+	 *     `'access_level'`: for authenticated requests, the permission level of the access token
+	 *
+	 * @return array
+	 */
+	public function getLastResponseInfo() {
+		$responseInfo = $this->consumer->getLastResponseInfo();
+		$headers = $this->consumer->getLastResponseHeaders();
+		if (!empty($headers)) {
+			$status = $this->extractHeader($headers, 'Status:');
+			if ($status !== false) {
+				$statusParts = explode(' ', $status);
+				$responseInfo['status_code'] = array_shift($statusParts);
+				$responseInfo['status_message'] = implode(' ', $statusParts);
+			}
+			$retryAfter = $this->extractHeader($headers, 'Retry-After:');
+			if ($retryAfter !== false) {
+				$responseInfo['remaining_hits'] = 0;
+				$responseInfo['reset_time_in_seconds'] = time() + $retryAfter;
+			} else {
+				$remainingHits = $this->extractHeader($headers, 'X-RateLimit-Remaining:');
+				if ($remainingHits !== false) {
+					$responseInfo['remaining_hits'] = $remainingHits;
+				}
+				$resetTimeInSeconds = $this->extractHeader($headers, 'X-RateLimit-Reset:');
+				if ($resetTimeInSeconds !== false) {
+					$responseInfo['reset_time_in_seconds'] = $resetTimeInSeconds;
+				}
+			}
+			$accessLevel = $this->extractHeader($headers, 'X-Access-Level');
+			if ($accessLevel !== false) {
+				$responseInfo['access_level'] = $accessLevel;
+			}
+		}
+		return $responseInfo;
+	}
 
-    try {
-      $response = $client->get($feed->uri, [
-        'headers' => [
-          'If-Modified-Since' => gmdate(DATE_RFC1123, $last_fetched),
-        ],
-      ]);
-      // Expected result.
-      // getBody() returns an instance of Psr\Http\Message\StreamInterface.
-      // @see http://docs.guzzlephp.org/en/latest/psr7.html#body
-      $data = $response->getBody();
-    }
-    catch (RequestException $e) {
-      watchdog_exception('my_module', $e);
-    }
-    */
+	public static function extractHeader($headers, $start, $end = '\n') {
+		$pattern = '/' . $start . '(.*?)' . $end . '/';
+		if (preg_match($pattern, $headers, $result)) {
+			return trim($result[1]);
+		} else {
+			return false;
+		}
+	}
 
-    return drupal_http_request($url, array('headers' => $headers, 'method' => $method, 'data' => $data));
-  }
+	/**
+	 * Exchange request token and secret for an access token and
+	 * secret, to sign API calls.
+	 */
+	public function getAccessToken($oauth_verifier = false) {
+		$token = $this->consumer->getAccessToken(
+			$this->access_token_url,
+			null,
+			$oauth_verifier
+		);
+		if ($token !== false) {
+			$this->token = $token;
+			$this->consumer->setToken(
+				$token['oauth_token'],
+				$token['oauth_token_secret']
+			);
+		}
+		return $token;
+	}
 
-  protected function parseResponse($response) {
-    // @see http://drupal.org/node/985544
-    // json_decode large integer issue
-    $length = strlen(PHP_INT_MAX);
-    $response = preg_replace('/"(id|in_reply_to_status_id)":(\d{' . $length . ',})/', '"\1":"\2"', $response);
-    return json_decode($response, TRUE);
-  }
+	/**
+	 * Returns the default HTTPHeaders for the OAuth client
+	 *
+	 * @return array
+	 */
+	public function getHTTPHeaders() {
+		return array(
+			'User-Agent' => $this->useragent
+		);
+	}
 
-  /**
-   * Creates an API endpoint URL.
-   *
-   * @param string $path
-   *   The path of the endpoint.
-   * @return
-   *   The complete path to the endpoint.
-   */
-  protected function createUrl($path) {
-    $url = $this->generic_url . $path;
-    return $url;
-  }
+	/**
+	 * GET wrapper for oAuthRequest.
+	 * @return object
+	 */
+	public function get($url, $parameters = array()) {
+		return $this->fetch($url, $parameters, OAUTH_HTTP_METHOD_GET);
+	}
 
-  /**
-   * Calls a 500px API endpoint.
-   */
-  public function call($path, $params = array(), $method = 'GET') {
-    $url = $this->createUrl($path);
+	/**
+	 * POST wrapper for oAuthRequest.
+	 */
+	public function post($url, $parameters = array()) {
+		return $this->fetch($url, $parameters, OAUTH_HTTP_METHOD_POST);
+	}
 
-    try {
-      $response = $this->authRequest($url, $params, $method);
-    }
-    catch (Exception $e) {
-      //watchdog('D500px', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
-      \Drupal::logger('D500px')->error($e->__toString());
-      return FALSE;
-    }
+	/**
+	 * DELETE wrapper for oAuthReqeust.
+	 */
+	public function delete($url, $parameters = array()) {
+		return $this->fetch($url, $parameters, OAUTH_HTTP_METHOD_DELETE);
+	}
 
-    if (!$response) {
-      return FALSE;
-    }
+	/**
+	 * Abstracts calling OAuth::fetch
+	 */
+	protected function fetch($url, $parameters = array(), $method = OAUTH_HTTP_METHOD_GET) {
+		$result = $this->consumer->fetch(
+			$this->normalizeUrl($url),
+			$parameters,
+			$method,
+			$this->getHTTPHeaders()
+		);
+		if ($result === true) {
+			$response = $this->consumer->getLastResponse();
+			$this->currentRetries = 0;
+			if ($this->format === 'json' && $this->decode_json) {
+				return json_decode($response);
+			}
+			return $response;
+		} else if ($this->retry) {
+			if ($this->currentRetries < $this->retryAttempts) {
+				$this->currentRetries++;
+				$this->fetch($url, $parameters, $method);
+			}
+		}
+		$this->currentRetries = 0;
+		//throw new OAuthException("Twitter returned an error for " . $url);
+	}
 
-    return $this->parseResponse($response);
-  }
+	/**
+	 * Adds on the baseurl and format extension if they don't already exist
+	 *
+	 * @param string $path
+	 * @return string
+	 */
+	public function normalizeUrl($path) {
+    $url =  $this->generic_url . $path;
+	  return $url;
+	}
 
 }
