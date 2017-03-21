@@ -1,0 +1,5 @@
+# config.factory helps us read data out of the config file in the "install" directory.
+services:
+  d500px.D500pxIntegration:
+    class: Drupal\d500px\D500pxIntegration
+    arguments: ["@config.factory", "@authentication.oauth"]

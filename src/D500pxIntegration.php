@@ -1,9 +1,20 @@
 <?php
 
 /**
- * Primary 500px API implementation class
+ * @file
+ * Contains Drupal\D500px\D500pxIntegration.
+ *
  */
-class D500px {
+
+namespace Drupal\D500px;
+
+use Drupal\Core\Config\ConfigFactory;
+
+/**
+ * Primary 500px API implementation class
+ * @package Drupal\D500px
+ */
+class D500pxIntegration {
 
   /**
    * @var $source the 500px api 'source'
@@ -14,24 +25,33 @@ class D500px {
   protected $token;
 
   /**
+   * Drupal\Core\Config\ConfigFactory definition.
+   *
+   * @var Drupal\Core\Config\ConfigFactory
+   */
+  protected $config_factory;
+
+  /**
    * Constructor for the 500px class
    */
-  public function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
-    $this->config = \Drupal::config('d500px.settings');
+   public function __construct(ConfigFactory $config_factory) {
+     $this->config_factory = $config_factory;
+     $config = $config_factory->get('d500px.settings');
 
-    $this->signature_method = new OAuthSignatureMethod_HMAC_SHA1();
-    $this->consumer = new OAuthConsumer($consumer_key, $consumer_secret);
+    ksm($config);
+    //$this->signature_method = new OAuthSignatureMethod_HMAC_SHA1();
+    //$this->consumer = new OAuthConsumer($consumer_key, $consumer_secret);
 
-    if (!empty($oauth_token) && !empty($oauth_token_secret)) {
-      $this->token = new OAuthConsumer($oauth_token, $oauth_token_secret);
-    }
+    //if (!empty($oauth_token) && !empty($oauth_token_secret)) {
+      //$this->token = new OAuthConsumer($oauth_token, $oauth_token_secret);
+    //}
 
     // @todo create all urls here
-    $this->request_token_url = $this->config->get('d500px_api') . '/v1/oauth/request_token';
-    $this->authorize_url = $this->config->get('d500px_api') . '/v1/oauth/authorize';
-    $this->authenticate_url = $this->config->get('d500px_api') . '/v1/oauth/authenticate';
-    $this->access_token_url = $this->config->get('d500px_api') . '/v1/oauth/access_token';
-    $this->generic_url = $this->config->get('d500px_api') . '/v1/';
+    $this->request_token_url = $config->get('d500px_api') . '/v1/oauth/request_token';
+    $this->authorize_url = $config->get('d500px_api') . '/v1/oauth/authorize';
+    $this->authenticate_url = $config->get('d500px_api') . '/v1/oauth/authenticate';
+    $this->access_token_url = $config->get('d500px_api') . '/v1/oauth/access_token';
+    $this->generic_url = $config->get('d500px_api') . '/v1/';
   }
 
   public function getRequestToken() {
