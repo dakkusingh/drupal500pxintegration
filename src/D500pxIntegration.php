@@ -211,6 +211,7 @@ class D500pxIntegration {
       $method,
       $this->getHTTPHeaders()
     );
+
     if ($result === true) {
       $response = $this->consumer->getLastResponse();
       $this->currentRetries = 0;
@@ -218,14 +219,19 @@ class D500pxIntegration {
         return json_decode($response);
       }
       return $response;
-    } else if ($this->retry) {
+    }
+
+    else if ($this->retry) {
       if ($this->currentRetries < $this->retryAttempts) {
         $this->currentRetries++;
         $this->fetch($url, $parameters, $method);
       }
     }
+
     $this->currentRetries = 0;
-    //throw new OAuthException("Twitter returned an error for " . $url);
+
+    // Logs an error
+    \Drupal::logger('D500px')->error("500px returned an error for " . $url);
   }
 
   /**
