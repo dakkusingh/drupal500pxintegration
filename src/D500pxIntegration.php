@@ -38,7 +38,9 @@ class D500pxIntegration {
      $this->config_factory = $config_factory;
      $config = $config_factory->get('d500px.settings');
 
+
     ksm($config);
+
     //$this->signature_method = new OAuthSignatureMethod_HMAC_SHA1();
     //$this->consumer = new OAuthConsumer($consumer_key, $consumer_secret);
 
