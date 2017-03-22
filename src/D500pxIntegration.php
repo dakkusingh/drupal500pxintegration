@@ -281,12 +281,6 @@ class D500pxIntegration {
     $attributes['class'][] = 'd500px_photo';
     $attributes['class'] = implode(' ', $attributes['class']);
 
-    // if NSFW is set to false and image is SFW
-    //if ($nsfw == TRUE) {
-      //$img_url = $photo_obj->url;
-      //$img_url = drupal_get_path('module', 'd500px') . '/images/nsfw.png'; // TODO: this can be done better
-    //}
-
     $image = array(
       '#theme' => 'image',
       '#style_name' => NULL,
@@ -298,6 +292,7 @@ class D500pxIntegration {
       '#attributes' => array('class' => $attributes['class']),
     );
 
+    // TODO I dont think this is the way
     return \Drupal::service('renderer')->render($image)->__toString();
   }
 
