@@ -5,11 +5,3 @@ d500px.settings:
     _title: '500px Integration Settings'
   requirements:
     _permission: 'administer site configuration'
-
-d500px.main_page_controller:
-  path: '/d500pxdemo'
-  defaults:
-    _controller: '\Drupal\d500px\Controller\d500pxdemo::mainPage'
-    _title: 'Main Page'
-  requirements:
-    _permission: 'access content'
