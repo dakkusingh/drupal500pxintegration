@@ -45,7 +45,7 @@ class D500pxSettingsForm extends ConfigFormBase {
       '#title' => t('OAuth Settings'),
     );
 
-    // @todo was this ever used?
+    //TODO was this ever used?
     /*
     $form['oauth']['callback_url'] = array(
       '#type' => 'item',
@@ -103,4 +103,3 @@ class D500pxSettingsForm extends ConfigFormBase {
   }
 
 }
-
