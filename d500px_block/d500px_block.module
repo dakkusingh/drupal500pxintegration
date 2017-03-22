@@ -26,17 +26,17 @@ function d500px_block_form_d500px_admin_form_alter(&$form, FormStateInterface $f
 
   $form['d500px_blocks'] = array(
     '#type'             => 'fieldset',
-    '#title'            => t('500px Block Config'),
+    '#title'            => $this->t('500px Block Config'),
     '#collapsible'      => FALSE,
     '#collapsed'        => FALSE,
   );
 
   $form['d500px_blocks']['d500px_blocks_number_blocks'] = array(
     '#type'             => 'select',
-    '#title'            => t('Number of blocks required?'),
+    '#title'            => $this->t('Number of blocks required?'),
     '#options'          => array_combine(range(1,20),range(1,20)),
     '#default_value'    => $config->get('d500px_block_number_blocks'),
-    '#description'      => t('The number of blocks can be increased or decreased at any time. Default is 1 block.'),
+    '#description'      => $this->t('The number of blocks can be increased or decreased at any time. Default is 1 block.'),
   );
 
   // Add a custom submit handler to save the

@@ -252,20 +252,21 @@ class D500pxIntegration {
    */
   public function getPhotos($parameters = array()) {
     $photos = $this->get('photos', $parameters)->photos;
-    return $this->themePhotos($photos);
-  }
-
-  public function themePhotos($photos = array()) {
     $themed_photos = NULL;
+
     foreach ($photos as $photo_obj) {
-      $themed_photos .= $this->themePhoto($photo_obj);
+      $themed_photo = array(
+        '#theme' => 'd500px_photo',
+        '#photo' => $this->preparePhoto($photo_obj),
+      );
+
+      $themed_photos[] = $themed_photo;
     }
 
-    return $themed_photos;
+    return array('#theme' => 'd500px_photos', '#photos' => $themed_photos);
   }
 
-
-  public function themePhoto($photo_obj) {
+  public function preparePhoto($photo_obj) {
     $size = $photo_obj->images[0]->size;
     $nsfw = $photo_obj->nsfw;
     $photo_page_url = $photo_obj->url;
@@ -282,8 +283,8 @@ class D500pxIntegration {
     $attributes['class'] = implode(' ', $attributes['class']);
 
     $image = array(
-      '#theme' => 'image',
-      '#style_name' => NULL,
+      //'#theme' => 'image',
+      //'#style_name' => NULL,
       '#uri' => $img_url,
       '#alt' => $title,
       '#title' => $title,
@@ -292,11 +293,11 @@ class D500pxIntegration {
       '#attributes' => array('class' => $attributes['class']),
     );
 
-    // TODO I dont think this is the way
-    return \Drupal::service('renderer')->render($image)->__toString();
+    return $image;
   }
 
-  private function d500px_photo_get_sizes() {
+
+  public function d500px_photo_get_sizes() {
     $d500px_photo_sizes_array = array(
       1 => array('height' => 70, 'width' => 70),
       2 => array('height' => 140, 'width' => 140),
@@ -308,6 +309,20 @@ class D500pxIntegration {
     );
 
     return $d500px_photo_sizes_array;
+  }
+
+  function d500px_available_features() {
+    $features_array = array(
+      "popular" => $this->t("Popular"),
+      "upcoming" => $this->t("Upcoming"),
+      "editors" => $this->t("Editors' Choice"),
+      "fresh_today" => $this->t("Fresh Today"),
+      "fresh_yesterday" => $this->t("Fresh Yesterday"),
+      "fresh_week" => $this->t("Fresh This Week"),
+      "user" => $this->t("User"),
+     );
+
+    return $features_array;
   }
 
 }
