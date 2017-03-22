@@ -245,4 +245,74 @@ class D500pxIntegration {
     return $url;
   }
 
+
+  /**
+   * GET wrapper for get.
+   * @return object
+   */
+  public function getPhotos($parameters = array()) {
+    $photos = $this->get('photos', $parameters)->photos;
+    return $this->themePhotos($photos);
+  }
+
+  public function themePhotos($photos = array()) {
+    $themed_photos = NULL;
+    foreach ($photos as $photo_obj) {
+      $themed_photos .= $this->themePhoto($photo_obj);
+    }
+
+    return $themed_photos;
+  }
+
+
+  public function themePhoto($photo_obj) {
+    $size = $photo_obj->images[0]->size;
+    $nsfw = $photo_obj->nsfw;
+    $photo_page_url = $photo_obj->url;
+    $title = $photo_obj->name;
+    $img_url = $photo_obj->image_url;
+
+    $d500px_photo_sizes_array = $this->d500px_photo_get_sizes();
+    $d500px_photo_size_array = $d500px_photo_sizes_array[$size];
+
+    $attributes['height'] = $d500px_photo_size_array['height'];
+    $attributes['width'] = $d500px_photo_size_array['width'];
+    $attributes['class'][] = 'd500px_photo_size_'. $size;
+    $attributes['class'][] = 'd500px_photo';
+    $attributes['class'] = implode(' ', $attributes['class']);
+
+    // if NSFW is set to false and image is SFW
+    //if ($nsfw == TRUE) {
+      //$img_url = $photo_obj->url;
+      //$img_url = drupal_get_path('module', 'd500px') . '/images/nsfw.png'; // TODO: this can be done better
+    //}
+
+    $image = array(
+      '#theme' => 'image',
+      '#style_name' => NULL,
+      '#uri' => $img_url,
+      '#alt' => $title,
+      '#title' => $title,
+      '#width' => $attributes['width'],
+      '#height' => $attributes['height'],
+      '#attributes' => array('class' => $attributes['class']),
+    );
+
+    return \Drupal::service('renderer')->render($image)->__toString();
+  }
+
+  private function d500px_photo_get_sizes() {
+    $d500px_photo_sizes_array = array(
+      1 => array('height' => 70, 'width' => 70),
+      2 => array('height' => 140, 'width' => 140),
+      3 => array('height' => 280, 'width' => 280),
+      100 => array('height' => 100, 'width' => 100),
+      200 => array('height' => 200, 'width' => 200),
+      440 => array('height' => 440, 'width' => 440),
+      600 => array('height' => 600, 'width' => 600),
+    );
+
+    return $d500px_photo_sizes_array;
+  }
+
 }

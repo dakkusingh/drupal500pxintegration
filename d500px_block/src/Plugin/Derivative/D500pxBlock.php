@@ -6,12 +6,14 @@ use Drupal\Component\Plugin\Derivative\DeriverBase;
 
 class D500pxBlock extends DeriverBase {
     public function getDerivativeDefinitions($base_plugin_definition) {
-      $max = 2;
+      // TODO Extend this to cater for user settings
+      $max = 1;
 
       for ($count = 0; $count < $max; $count++) {
         $delta = 'd500px_block_'. $count;
         $this->derivatives[$delta] = $base_plugin_definition;
 
+        // TODO re-work this logic
         // block 0 is confusing
         /*$title_count = $count + 1;
 
@@ -40,8 +42,9 @@ class D500pxBlock extends DeriverBase {
         }*/
 
         $this->derivatives[$delta]['admin_label'] = t('500px Title: @name', array('@name' => $delta));
-        }
-        return $this->derivatives;
+      }
+
+      return $this->derivatives;
 
   }
 }

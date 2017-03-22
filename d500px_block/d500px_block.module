@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function d500px_block_theme() {
+  return array(
+    'd500px_block_photo' => array(
+      'variables' => array(),
+    ),
+    'd500px_block_photos' => array(
+      'variables' => array(),
+    ),
+  );
+}
