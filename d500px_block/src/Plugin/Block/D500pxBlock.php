@@ -19,35 +19,56 @@ use Drupal\Core\Form\FormStateInterface;
  * )
  */
 class D500pxBlock extends BlockBase implements BlockPluginInterface {
+
+  /**
+   * Overrides \Drupal\Component\Plugin\PluginBase::__construct().
+   *
+   * Overrides the construction of context aware plugins to allow for
+   * unvalidated constructor based injection of contexts.
+   *
+   * @param array $configuration
+   *   The plugin configuration, i.e. an array with configuration values keyed
+   *   by configuration option name. The special key 'context' may be used to
+   *   initialize the defined contexts by setting it to an array of context
+   *   values keyed by context names.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->d500pxintegration = \Drupal::service('d500px.d500pxintegration');
+    $this->d500pxconfig = \Drupal::config('d500px.settings');
+  }
+
+
   public function build() {
     $block_id = $this->getDerivativeId();
     $config = $this->getConfiguration();
-    $d500pxintegration = \Drupal::service('d500px.d500pxintegration');
 
     $build = array('#cache' => array('max-age' => 0));
 
     $params = array(
-      //'feature'       => $block_settings['feature'],
+      'feature'       => $config['feature'],
       'rpp'           => $config['rpp'],
-      //'image_size[]'  => range(1, 4), // better to get all sizes and deal with requested size at theme level
-      //'sort'          => $block_settings['sort'],
+      'image_size'    => $config['image_size'],
+      'sort'          => $config['sort'],
     );
 
     // add category if its not all
-    /*if ($block_settings['only'] != '- All -') {
-      $params += array('only' => $block_settings['only']);
+    if ($config['only'] != '- All -') {
+      $params += array('only' => $config['only']);
     }
 
     // add username
-    if (!empty($block_settings['username'])) {
-      $params += array('username' => $block_settings['username']);
-    }*/
-
-
+    if (!empty($config['username'])) {
+      $params += array('username' => $config['username']);
+    }
 
     // get some pics
-    $content = $d500pxintegration->getPhotos($params);
-    
+    $content = $this->d500pxintegration->getPhotos($params);
+
     // check if there are any photos firstly
     if (empty($content)) {
       return $build['#markup'] = $this->t('No Pics!');
@@ -64,6 +85,14 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
     $form = parent::blockForm($form, $form_state);
 
     $config = $this->getConfiguration();
+
+    $form['d500px_block_block_common'] = array(
+      '#type'               => 'fieldset',
+      '#title'              => $this->t('500px Block Settings'),
+      '#collapsible'        => FALSE,
+      '#collapsed'          => FALSE,
+    );
+
     $form['d500px_block_block_common']['rpp'] = array(
       '#type'               => 'select',
       '#title'              => $this->t('Number of photos to display?'),
@@ -73,7 +102,83 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
       //'#required'           => TRUE,
     );
 
+    $form['d500px_block_block_common']['feature'] = array(
+       '#type'               => 'select',
+       '#title'              => $this->t('Photo stream to be retrieved?'),
+       '#options'            => $this->d500pxintegration->d500px_available_features(),
+       '#default_value'      => isset($config['feature']) ? $config['feature'] : 'fresh_today',
+       '#description'        => $this->t('Photo stream to be retrieved. Default fresh_today.'),
+       //'#required'           => TRUE,
+     );
+
+     $image_options_available = $this->d500pxintegration->d500px_photo_get_sizes();
+     foreach ($image_options_available as $image_option_key => $value) {
+       $image_options[$image_option_key] = $value['width'] . 'x' . $value['height'];
+     }
+
+     $form['d500px_block_block_common']['image_size'] = array(
+       '#type'               => 'select',
+       '#title'              => $this->t('Thumbnail size:'),
+       '#options'            => $image_options,
+       '#default_value'      => isset($config['image_size']) ? $config['image_size'] : 2,
+       '#description'        => $this->t('The photo size to be displayed.'),
+       //'#required'           => TRUE,
+     );
+
+     $available_categories = $this->d500pxintegration->d500px_available_categories();
+     foreach ($available_categories as $key => $value) {
+       $categories[$value] = $this->t($value);
+     }
+
+
+     $form['d500px_block_block_common']['only'] = array(
+       '#type'               => 'select',
+       '#title'              => $this->t('Photo Category'),
+       '#options'            => $categories,
+       '#default_value'      => isset($config['only']) ? $config['only'] : '- All -',
+       '#description'        => $this->t('If you want results from a specific category'),
+       //'#required'           => TRUE,
+     );
+
+     $form['d500px_block_block_common']['sort'] = array(
+       '#type'               => 'select',
+       '#title'              => $this->t('Sort photos in the specified order'),
+       '#options'            => $this->d500pxintegration->d500px_available_sort_options(),
+       '#default_value'      => isset($config['sort']) ? $config['sort'] : 'created_at',
+       '#description'        => t('Sort photos in the specified order'),
+       //'#required'           => TRUE,
+     );
+
+     $form['d500px_block_block_common']['username'] = array(
+       '#type'               => 'textfield',
+       '#title'              => t('Username'),
+       '#default_value'      => isset($config['username']) ? $config['username'] : '',
+       //'#required'           => FALSE,
+       '#description'        => t('All per-user streams require a user_id or username parameter.'),
+       '#element_validate'   => array(array($this, 'usernameElementValidator')),
+     );
+
+     /*
+     $form['d500px_block_block_common']['nsfw'] = array(
+       '#type'               => 'checkbox',
+       '#title'              => t('Display NSFW photos?'),
+       '#default_value'      => isset($config['nsfw']) ? $config['nsfw'] : $this->d500pxconfig->get('d500px_nsfw'),
+       '#description'        => t('Some photos on 500px are "Not Safe For Work" (or children), use with care. By default all NSFW images will be blacked out.'),
+     );
+     */
     return $form;
+  }
+
+  public static function usernameElementValidator(&$element, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
+
+    if (($values['settings']['d500px_block_block_common']['feature'] == 'user'
+        OR $values['settings']['d500px_block_block_common']['feature'] == 'user_friends') 
+        AND (empty($element['#value']))) {
+      $form_state->setError($element, t("Additional parameter 'username' is required"));
+    }
+
+    //ksm($element);
   }
 
   /**
@@ -81,5 +186,11 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['rpp'] = $form_state->getValue(array('d500px_block_block_common', 'rpp'));
+    $this->configuration['feature'] = $form_state->getValue(array('d500px_block_block_common', 'feature'));
+    // $this->configuration['nsfw'] = $form_state->getValue(array('d500px_block_block_common', 'nsfw'));
+    $this->configuration['image_size'] = $form_state->getValue(array('d500px_block_block_common', 'image_size'));
+    $this->configuration['only'] = $form_state->getValue(array('d500px_block_block_common', 'only'));
+    $this->configuration['sort'] = $form_state->getValue(array('d500px_block_block_common', 'sort'));
+    $this->configuration['username'] = $form_state->getValue(array('d500px_block_block_common', 'username'));
   }
 }
