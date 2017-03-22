@@ -74,7 +74,6 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
   public function build() {
     $block_id = $this->getDerivativeId();
     $config = $this->getConfiguration();
-    ksm($config);
 
     $build = array('#cache' => array('max-age' => 0));
 
