@@ -7,7 +7,8 @@ use Drupal\Component\Plugin\Derivative\DeriverBase;
 class D500pxBlock extends DeriverBase {
     public function getDerivativeDefinitions($base_plugin_definition) {
       // TODO Extend this to cater for user settings
-      $max = 1;
+      $config = \Drupal::config('d500px_block.settings');
+      $max = $config->get('d500px_block_number_blocks');
 
       for ($count = 0; $count < $max; $count++) {
         $delta = 'd500px_block_'. $count;

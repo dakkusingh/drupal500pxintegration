@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Implements hook_theme().
  */
@@ -12,4 +14,44 @@ function d500px_block_theme() {
       'variables' => array(),
     ),
   );
+}
+
+
+/**
+ * implimentation of hook_form_FORM_ID_alter()
+ */
+function d500px_block_form_d500px_admin_form_alter(&$form, FormStateInterface $form_state) {
+
+  $config = \Drupal::config('d500px_block.settings');
+
+  $form['d500px_blocks'] = array(
+    '#type'             => 'fieldset',
+    '#title'            => t('500px Block Config'),
+    '#collapsible'      => FALSE,
+    '#collapsed'        => FALSE,
+  );
+
+  $form['d500px_blocks']['d500px_blocks_number_blocks'] = array(
+    '#type'             => 'select',
+    '#title'            => t('Number of blocks required?'),
+    '#options'          => array_combine(range(1,20),range(1,20)),
+    '#default_value'    => $config->get('d500px_block_number_blocks'),
+    '#description'      => t('The number of blocks can be increased or decreased at any time. Default is 1 block.'),
+  );
+
+  // Add a custom submit handler to save the
+  // array of types back to the config file.
+  $form['actions']['submit']['#submit'][] = 'd500px_block_form_d500px_admin_form_submit';
+}
+
+
+/**
+ * Save d500px_block settings.
+ */
+function d500px_block_form_d500px_admin_form_submit($form, FormStateInterface $form_state) {
+  $values = $form_state->getValues();
+
+  $config = \Drupal::configFactory()->getEditable('d500px_block.settings');
+  // Set the variables.
+  $config->set('d500px_block_number_blocks', $values['d500px_blocks_number_blocks'])->save();
 }
