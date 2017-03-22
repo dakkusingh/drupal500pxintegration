@@ -42,10 +42,39 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
     $this->d500pxconfig = \Drupal::config('d500px.settings');
   }
 
+  // TODO See if this label business can work
+  /*
+  public function defaultConfiguration() {
+    $config = $this->getConfiguration();
+
+    if (!empty($config['feature'])) {
+
+      // add title and feature
+      $title = t('500px: ') . $config['feature'];
+
+      // user feature? add username
+      if ($config['feature'] == 'user') {
+        $title .= ':'. $config['username'];
+      }
+
+      // selected album? add album name
+      if ($config['only'] != '- All -') {
+        $title .= ' - '. $config['only'];
+      }
+
+      // finally add number of items
+      $title .= ' ('. $config['rpp'] .')';
+
+      return array(
+        'label' => $title,
+      );
+    }
+  }*/
 
   public function build() {
     $block_id = $this->getDerivativeId();
     $config = $this->getConfiguration();
+    ksm($config);
 
     $build = array('#cache' => array('max-age' => 0));
 
@@ -173,12 +202,10 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
     $values = $form_state->getValues();
 
     if (($values['settings']['d500px_block_block_common']['feature'] == 'user'
-        OR $values['settings']['d500px_block_block_common']['feature'] == 'user_friends') 
+        OR $values['settings']['d500px_block_block_common']['feature'] == 'user_friends')
         AND (empty($element['#value']))) {
       $form_state->setError($element, t("Additional parameter 'username' is required"));
     }
-
-    //ksm($element);
   }
 
   /**
