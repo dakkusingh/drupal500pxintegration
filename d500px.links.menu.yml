@@ -1,4 +1,4 @@
 d500px.settings:
-  title: 500px Integration Settings
-  description: Configure 500px Integration Settings.
+  title: '500px Integration Settings'
+  description: 'Configure 500px Integration Settings.'
   route_name: d500px.settings

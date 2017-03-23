@@ -3,14 +3,14 @@
 /**
  * @file
  * Contains Drupal\D500px\D500pxIntegration.
- *
  */
 
 namespace Drupal\D500px;
+
 use Drupal\Core\Config\ConfigFactory;
 
-
 /**
+ * This class needs to be unit tested.
  * Primary 500px API implementation class
  * @package Drupal\D500px
  */
@@ -377,4 +377,5 @@ class D500pxIntegration {
 
     return $categories_array;
   }
+
 }
