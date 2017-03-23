@@ -10,12 +10,11 @@ use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Display all instances for 'YourBlock' block plugin.
+ * Provides d500px Block.
  *
  * @Block(
  *   id = "d500px_block",
- *   admin_label = @Translation("Your block"),
- *   deriver = "Drupal\d500px_block\Plugin\Derivative\D500pxBlock"
+ *   admin_label = @Translation("500px block"),
  * )
  */
 class D500pxBlock extends BlockBase implements BlockPluginInterface {
