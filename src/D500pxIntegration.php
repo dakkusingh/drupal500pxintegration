@@ -9,6 +9,9 @@
 namespace Drupal\D500px;
 use Drupal\Core\Config\ConfigFactory;
 
+use \OAuth;
+use \OAuthException;
+use \Exception;
 
 /**
  * Primary 500px API implementation class
@@ -50,7 +53,7 @@ class D500pxIntegration {
     $this->config_factory = $config_factory;
     $config = $config_factory->get('d500px.settings');
 
-    $this->consumer = new \OAuth(
+    $this->consumer = new OAuth(
       $config->get('d500px_consumer_key'),
       $config->get('d500px_consumer_secret'),
       OAUTH_SIG_METHOD_HMACSHA1,
@@ -205,33 +208,32 @@ class D500pxIntegration {
    * Abstracts calling OAuth::fetch
    */
   protected function fetch($url, $parameters = array(), $method = OAUTH_HTTP_METHOD_GET) {
-    $result = $this->consumer->fetch(
-      $this->normalizeUrl($url),
-      $parameters,
-      $method,
-      $this->getHTTPHeaders()
-    );
+    try{
+      $result = $this->consumer->fetch(
+        $this->normalizeUrl($url),
+        $parameters,
+        $method,
+        array()
+      );
+    }
+    catch(OAuthException $e) {
+      // TODO Extend this to log to watchdog
+      //ksm($e->getTrace());
+      //echo $e->getMessage(); // Invalid auth/bad request (got a 401, expected HTTP/1.1 20X or a redirect)
+      //ksm($e);
+    }
 
     if ($result === true) {
       $response = $this->consumer->getLastResponse();
-      $this->currentRetries = 0;
       if ($this->format === 'json' && $this->decode_json) {
         return json_decode($response);
       }
       return $response;
     }
 
-    else if ($this->retry) {
-      if ($this->currentRetries < $this->retryAttempts) {
-        $this->currentRetries++;
-        $this->fetch($url, $parameters, $method);
-      }
-    }
-
-    $this->currentRetries = 0;
-
+    // TODO use try catch above
     // Logs an error
-    \Drupal::logger('D500px')->error("500px returned an error for " . $url);
+    // \Drupal::logger('D500px')->error("500px returned an error for " . $url);
   }
 
   /**
