@@ -98,7 +98,8 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
 
     // check if there are any photos firstly
     if (empty($content)) {
-      return $build['#markup'] = $this->t('No Pics!');
+      $build['#markup'] = $this->t('No Pics!');
+      return $build;
     }
 
     $build['content'] = $content;
