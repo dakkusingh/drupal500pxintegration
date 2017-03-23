@@ -283,8 +283,8 @@ class D500pxIntegration {
     $attributes['class'] = implode(' ', $attributes['class']);
 
     $image = array(
-      //'#theme' => 'image',
-      //'#style_name' => NULL,
+      '#theme' => 'image',
+      '#style_name' => NULL,
       '#uri' => $img_url,
       '#alt' => $title,
       '#title' => $title,

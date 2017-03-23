@@ -15,6 +15,12 @@ function d500px_theme() {
 }
 
 function d500px_preprocess_d500px_photo(array &$variables) {
-  $variables['photo']['#theme'] = 'image';
-  $variables['photo']['#style_name'] = NULL;
+  //$variables['photo']['#theme'] = 'image121212';
+  //$variables['photo']['#style_name'] = NULL;
+  //ksm($variables['photo'][]);
+}
+
+
+function d500px_preprocess_d500px_photos(array &$variables) {
+  //ksm($variables['photos']);
 }
