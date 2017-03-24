@@ -6,7 +6,7 @@
 function d500px_theme() {
   return array(
     'd500px_photo' => array(
-      'variables' => array('photo' => NULL),
+      'variables' => array('photo' => NULL, 'photo_page_url' => NULL),
     ),
     'd500px_photos' => array(
       'variables' => array('photos' => NULL),

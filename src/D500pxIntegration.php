@@ -32,6 +32,7 @@ class D500pxIntegration {
     $this->authenticate_url = $this->config->get('d500px_api') . '/v1/oauth/authenticate';
     $this->access_token_url = $this->config->get('d500px_api') . '/v1/oauth/access_token';
     $this->generic_url = $this->config->get('d500px_api') . '/v1/';
+    $this->website_url = $this->config->get('d500px_host');
 
     // Guzzle oAuth client
     $stack = HandlerStack::create();
@@ -74,6 +75,7 @@ class D500pxIntegration {
       $themed_photo = array(
         '#theme' => 'd500px_photo',
         '#photo' => $this->preparePhoto($photo_obj),
+        '#photo_page_url' => $this->website_url . $photo_obj->url,
       );
 
       $themed_photos[] = $themed_photo;
@@ -84,16 +86,15 @@ class D500pxIntegration {
 
   public function preparePhoto($photo_obj) {
     $size = $photo_obj->images[0]->size;
-    $nsfw = $photo_obj->nsfw;
-    $photo_page_url = $photo_obj->url;
     $title = $photo_obj->name;
     $img_url = $photo_obj->image_url;
+
+    // TODO Add NSFW image logic.
+    $nsfw = $photo_obj->nsfw;
 
     $d500px_photo_sizes_array = $this->d500px_photo_get_sizes();
     $d500px_photo_size_array = $d500px_photo_sizes_array[$size];
 
-    $attributes['height'] = $d500px_photo_size_array['height'];
-    $attributes['width'] = $d500px_photo_size_array['width'];
     $attributes['class'][] = 'd500px_photo_size_'. $size;
     $attributes['class'][] = 'd500px_photo';
     $attributes['class'] = implode(' ', $attributes['class']);
@@ -104,8 +105,8 @@ class D500pxIntegration {
       '#uri' => $img_url,
       '#alt' => $title,
       '#title' => $title,
-      '#width' => $attributes['width'],
-      '#height' => $attributes['height'],
+      '#width' => $d500px_photo_size_array['height'],
+      '#height' => $d500px_photo_size_array['width'],
       '#attributes' => array('class' => $attributes['class']),
     );
 
