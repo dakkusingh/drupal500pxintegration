@@ -7,7 +7,6 @@
 
 namespace Drupal\d500px\Form;
 
-
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -44,15 +43,6 @@ class D500pxSettingsForm extends ConfigFormBase {
       '#type' => 'fieldset',
       '#title' => t('OAuth Settings'),
     );
-
-    //TODO was this ever used?
-    /*
-    $form['oauth']['callback_url'] = array(
-      '#type' => 'item',
-      '#title' => t('Callback URL'),
-      '#markup' => url('d500px/oauth', array('absolute' => TRUE)),
-    );
-    */
 
     $form['oauth']['d500px_consumer_key'] = array(
       '#type' => 'textfield',
@@ -91,7 +81,6 @@ class D500pxSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
     $this->config('d500px.settings')
       ->set('d500px_consumer_key', $form_state->getValue('d500px_consumer_key'))
       ->set('d500px_consumer_secret', $form_state->getValue('d500px_consumer_secret'))
