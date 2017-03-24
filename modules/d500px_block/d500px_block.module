@@ -1,7 +1,5 @@
 <?php
 
-use Drupal\Core\Form\FormStateInterface;
-
 /**
  * Implements hook_theme().
  */
