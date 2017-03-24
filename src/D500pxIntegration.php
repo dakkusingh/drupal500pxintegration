@@ -23,50 +23,51 @@ class D500pxIntegration {
    * Constructor for the 500px class
    */
   public function __construct(ConfigFactory $config_factory) {
+    // Get the config
     $this->config = $config_factory->get('d500px.settings');
 
+    // Add 500px config
     $this->request_token_url = $this->config->get('d500px_api') . '/v1/oauth/request_token';
     $this->authorize_url = $this->config->get('d500px_api') . '/v1/oauth/authorize';
     $this->authenticate_url = $this->config->get('d500px_api') . '/v1/oauth/authenticate';
     $this->access_token_url = $this->config->get('d500px_api') . '/v1/oauth/access_token';
     $this->generic_url = $this->config->get('d500px_api') . '/v1/';
-  }
 
-  /**
-   * GET wrapper for get.
-   * @return object
-   */
-  public function getPhotos($parameters = array()) {
+    // Guzzle oAuth client
     $stack = HandlerStack::create();
 
     $middleware = new Oauth1([
       'consumer_key'      => $this->config->get('d500px_consumer_key'),
       'consumer_secret'   => $this->config->get('d500px_consumer_secret'),
-      //'token_secret'      => ''
+
+      // TODO investigate how to fetch tokens from 500px.
+      // until then set the token_secret to null
+      'token_secret'      => ''
     ]);
 
     $stack->push($middleware);
 
-    $client = new Client([
+    $this->client = new Client([
       'base_uri' => $this->generic_url,
       'handler' => $stack,
-      'auth' => 'oauth'
+      'auth' => 'oauth',
+      //'debug' => true
     ]);
 
-    // Set the "auth" request option to "oauth" to sign using oauth
-    $response = $client->get('photos?feature=fresh_today&sort=created_at&image_size=3&include_store=store_download&include_states=voted', ['debug' => true]);
-    //$response = $client->get('users', 'debug' => true]);
-    $body = $response->getBody();
-    ksm(json_decode((string) $body));
   }
 
+  public function requestD500px($url, $parameters = array(), $method = "GET") {
+    $response = $this->client->request($method, $url, ['query' => $parameters]);
 
-  /**
-   * GET wrapper for get.
-   * @return object
-   */
-  public function getPhotos_old($parameters = array()) {
-    $photos = $this->get('photos', $parameters)->photos;
+    // TODO Add some checking
+    $body = $response->getBody();
+
+    // TODO Add some checking
+    return json_decode((string) $body);
+  }
+
+  public function getPhotos($parameters = array()) {
+    $photos = $this->requestD500px('photos', $parameters)->photos;
     $themed_photos = NULL;
 
     foreach ($photos as $photo_obj) {
