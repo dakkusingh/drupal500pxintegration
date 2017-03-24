@@ -7,8 +7,8 @@
  */
 
 namespace Drupal\D500px;
-use Drupal\Core\Config\ConfigFactory;
 
+use Drupal\Core\Config\ConfigFactory;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
@@ -23,10 +23,10 @@ class D500pxIntegration {
    * Constructor for the 500px class
    */
   public function __construct(ConfigFactory $config_factory) {
-    // Get the config
+    // Get the config.
     $this->config = $config_factory->get('d500px.settings');
 
-    // Add 500px config
+    // Add 500px config.
     $this->request_token_url = $this->config->get('d500px_api') . '/v1/oauth/request_token';
     $this->authorize_url = $this->config->get('d500px_api') . '/v1/oauth/authorize';
     $this->authenticate_url = $this->config->get('d500px_api') . '/v1/oauth/authenticate';
@@ -34,7 +34,7 @@ class D500pxIntegration {
     $this->generic_url = $this->config->get('d500px_api') . '/v1/';
     $this->website_url = $this->config->get('d500px_host');
 
-    // Guzzle oAuth client
+    // Guzzle oAuth client.
     $stack = HandlerStack::create();
 
     $middleware = new Oauth1([
@@ -42,7 +42,7 @@ class D500pxIntegration {
       'consumer_secret'   => $this->config->get('d500px_consumer_secret'),
 
       // TODO investigate how to fetch tokens from 500px.
-      // until then set the token_secret to null
+      // Until then set the token_secret to null.
       'token_secret'      => ''
     ]);
 
@@ -60,13 +60,14 @@ class D500pxIntegration {
   public function requestD500px($url, $parameters = array(), $method = "GET") {
     $response = $this->client->request($method, $url, ['query' => $parameters]);
 
-    // TODO Add some checking
+    // TODO Add some checking.
     $body = $response->getBody();
 
-    // TODO Add some checking
+    // TODO Add some checking.
     return json_decode((string) $body);
   }
 
+  // TODO Figure out a better place for these helper functions.
   public function getPhotos($parameters = array()) {
     $photos = $this->requestD500px('photos', $parameters)->photos;
     $themed_photos = NULL;
@@ -84,6 +85,7 @@ class D500pxIntegration {
     return array('#theme' => 'd500px_photos', '#photos' => $themed_photos);
   }
 
+  // TODO Figure out a better place for these helper functions.
   public function preparePhoto($photo_obj) {
     $size = $photo_obj->images[0]->size;
     $title = $photo_obj->name;
@@ -113,7 +115,8 @@ class D500pxIntegration {
     return $image;
   }
 
-
+  // TODO Figure out a better place for these helper functions.
+  // TODO Update naming conventions to match accorgingly.
   public function d500px_photo_get_sizes() {
     $d500px_photo_sizes_array = array(
       1 => array('height' => 70, 'width' => 70),
@@ -128,6 +131,8 @@ class D500pxIntegration {
     return $d500px_photo_sizes_array;
   }
 
+  // TODO Figure out a better place for these helper functions.
+  // TODO Update naming conventions to match accorgingly.
   public function d500px_available_features() {
     $features_array = array(
       'popular' => t('Popular Photos.'),
@@ -144,7 +149,8 @@ class D500pxIntegration {
     return $features_array;
   }
 
-
+  // TODO Figure out a better place for these helper functions.
+  // TODO Update naming conventions to match accorgingly.
   public function d500px_available_sort_options() {
     $sort_options_array = array(
       'created_at' => t('Time of upload, most recent first'),
@@ -159,6 +165,8 @@ class D500pxIntegration {
     return $sort_options_array;
   }
 
+  // TODO Figure out a better place for these helper functions.
+  // TODO Update naming conventions to match accorgingly.
   function d500px_available_categories() {
     $categories_array = array(
       '- All -' => '- All -',
@@ -194,4 +202,5 @@ class D500pxIntegration {
 
     return $categories_array;
   }
+
 }
