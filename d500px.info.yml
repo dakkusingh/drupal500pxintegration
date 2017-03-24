@@ -1,5 +1,6 @@
-name: "500px Integration"
+name: 500px Integration
 type: module
-description: "500px Integration for Drupal provides API access to 500px web functionality and content."
-core: 8.x
+description: '500px Integration for Drupal provides API access to 500px web functionality and content.'
 package: Media
+version: VERSION
+core: 8.x
