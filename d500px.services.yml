@@ -4,4 +4,7 @@ services:
     arguments: ["@config.factory"]
   d500px.D500pxHelpers:
     class: Drupal\d500px\D500pxHelpers
-    arguments: ["@d500px.D500pxIntegration"]
+    arguments: []
+  d500px.D500pxPhotos:
+    class: Drupal\d500px\D500pxPhotos
+    arguments: ["@d500px.D500pxHelpers", "@d500px.D500pxIntegration"]

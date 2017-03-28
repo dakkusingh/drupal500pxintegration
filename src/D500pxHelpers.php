@@ -7,51 +7,12 @@
 
 namespace Drupal\D500px;
 
-use Drupal\d500px\D500pxIntegration;
-
 /**
  * 500px Helper class.
  *
  * @package Drupal\D500px
  */
 class D500pxHelpers {
-
-  /**
-   * @var \Drupal\d500px\D500pxIntegration
-   */
-  protected $d500pxintegration;
-
-
-
-  /**
-   * Constructor for the 500px helpers class.
-   */
-  public function __construct(D500pxIntegration $d500pxintegration) {
-    $this->d500pxintegration = $d500pxintegration;
-  }
-
-  /**
-   * Helper method to get photos.
-   *
-   * @param array $parameters
-   * @return array
-   *
-   * TODO Figure out a better place for these helper functions.
-   */
-  public function getPhotos($parameters = array()) {
-    $photos = $this->d500pxintegration->requestD500px('photos', $parameters)->photos;
-    $themed_photos = NULL;
-
-    foreach ($photos as $photo_obj) {
-      $themed_photos[] = array(
-        '#theme' => 'd500px_photo',
-        '#photo' => $this->preparePhoto($photo_obj),
-        '#photo_page_url' => $this->d500pxintegration->website_url . $photo_obj->url,
-      );
-    }
-
-    return array('#theme' => 'd500px_photos', '#photos' => $themed_photos);
-  }
 
   /**
    * Helper method to prepare a photo just after we retrieved it from 500px.

@@ -39,7 +39,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->d500pxintegration = \Drupal::service('d500px.d500pxhelpers');
+    $this->d500pxphotos = \Drupal::service('d500px.d500pxphotos');
     $this->d500pxconfig = \Drupal::config('d500px.settings');
   }
 
@@ -101,7 +101,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
 
     // Get some pics.
     // TODO Error handling, what if $content is NULL?
-    $content = $this->d500pxintegration->getPhotos($params);
+    $content = $this->d500pxphotos->getPhotos($params);
 
     // Check if there are any photos firstly.
     if (empty($content)) {
@@ -139,7 +139,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
     $form['d500px_block_block_common']['feature'] = array(
       '#type'               => 'select',
       '#title'              => $this->t('Photo stream to be retrieved?'),
-      '#options'            => $this->d500pxintegration->availableFeatures(),
+      '#options'            => $this->d500pxphotos->d500pxhelpers->availableFeatures(),
       '#default_value'      => isset($config['feature']) ? $config['feature'] : 'fresh_today',
       '#description'        => $this->t('Photo stream to be retrieved. Default fresh_today.'),
     );
@@ -158,7 +158,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
       ),
     );
 
-    $image_options_available = $this->d500pxintegration->photoGetSizes();
+    $image_options_available = $this->d500pxphotos->d500pxhelpers->photoGetSizes();
     foreach ($image_options_available as $image_option_key => $value) {
       $image_options[$image_option_key] = $value['width'] . 'x' . $value['height'];
     }
@@ -171,7 +171,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
       '#description'        => $this->t('The photo size to be displayed.'),
     );
 
-    $available_categories = $this->d500pxintegration->availableCategories();
+    $available_categories = $this->d500pxphotos->d500pxhelpers->availableCategories();
     foreach ($available_categories as $key => $value) {
       $categories[$value] = $this->t($value);
     }
@@ -187,7 +187,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
     $form['d500px_block_block_common']['sort'] = array(
       '#type'               => 'select',
       '#title'              => $this->t('Sort photos in the specified order'),
-      '#options'            => $this->d500pxintegration->availableSortOptions(),
+      '#options'            => $this->d500pxphotos->d500pxhelpers->availableSortOptions(),
       '#default_value'      => isset($config['sort']) ? $config['sort'] : 'created_at',
       '#description'        => t('Sort photos in the specified order'),
     );
