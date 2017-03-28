@@ -171,6 +171,9 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function usernameElementValidator(&$element, FormStateInterface $form_state) {
     $values = $form_state->getValues();
 
