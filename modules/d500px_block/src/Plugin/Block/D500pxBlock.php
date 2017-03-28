@@ -39,7 +39,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->d500pxintegration = \Drupal::service('d500px.d500pxintegration');
+    $this->d500pxintegration = \Drupal::service('d500px.d500pxhelpers');
     $this->d500pxconfig = \Drupal::config('d500px.settings');
   }
 
