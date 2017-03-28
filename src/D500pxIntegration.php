@@ -27,19 +27,19 @@ class D500pxIntegration {
     $this->config = $config_factory->get('d500px.settings');
 
     // Add 500px config.
-    $this->request_token_url = $this->config->get('d500px_api') . '/v1/oauth/request_token';
-    $this->authorize_url = $this->config->get('d500px_api') . '/v1/oauth/authorize';
-    $this->authenticate_url = $this->config->get('d500px_api') . '/v1/oauth/authenticate';
-    $this->access_token_url = $this->config->get('d500px_api') . '/v1/oauth/access_token';
-    $this->generic_url = $this->config->get('d500px_api') . '/v1/';
-    $this->website_url = $this->config->get('d500px_host');
+    $this->request_token_url = $this->config->get('api_uri') . '/v1/oauth/request_token';
+    $this->authorize_url = $this->config->get('api_uri') . '/v1/oauth/authorize';
+    $this->authenticate_url = $this->config->get('api_uri') . '/v1/oauth/authenticate';
+    $this->access_token_url = $this->config->get('api_uri') . '/v1/oauth/access_token';
+    $this->generic_url = $this->config->get('api_uri') . '/v1/';
+    $this->website_url = $this->config->get('host_uri');
 
     // Guzzle oAuth client.
     $stack = HandlerStack::create();
 
     $middleware = new Oauth1([
-      'consumer_key'      => $this->config->get('d500px_consumer_key'),
-      'consumer_secret'   => $this->config->get('d500px_consumer_secret'),
+      'consumer_key'      => $this->config->get('oauth_consumer_key'),
+      'consumer_secret'   => $this->config->get('oauth_consumer_secret'),
 
       // TODO investigate how to fetch tokens from 500px.
       // Until then set the token_secret to null.

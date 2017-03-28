@@ -196,7 +196,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
     $form['d500px_block_block_common']['nsfw'] = array(
       '#type'               => 'checkbox',
       '#title'              => t('Display NSFW photos?'),
-      '#default_value'      => isset($config['nsfw']) ? $config['nsfw'] : $this->d500pxconfig->get('d500px_nsfw'),
+      '#default_value'      => isset($config['nsfw']) ? $config['nsfw'] : $this->d500pxconfig->get('nsfw'),
       '#description'        => t('Some photos on 500px are "Not Safe For Work" (or children), use with care. By default all NSFW images will be blacked out.'),
     );
     */

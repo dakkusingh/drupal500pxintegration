@@ -51,16 +51,16 @@ class D500pxSettingsForm extends ConfigFormBase {
       '#markup' => t('To get your OAuth credentials, you need to register your application on @link.', ['@link' => Link::fromTextAndUrl('https://500px.com/settings/applications', Url::fromUri('https://500px.com/settings/applications'))->toString()]),
     ];
 
-    $form['oauth']['d500px_consumer_key'] = [
+    $form['oauth']['oauth_consumer_key'] = [
       '#type' => 'textfield',
       '#title' => t('OAuth Consumer key'),
-      '#default_value' => $config->get('d500px_consumer_key'),
+      '#default_value' => $config->get('oauth_consumer_key'),
     ];
 
-    $form['oauth']['d500px_consumer_secret'] = [
+    $form['oauth']['oauth_consumer_secret'] = [
       '#type' => 'textfield',
       '#title' => t('OAuth Consumer secret'),
-      '#default_value' => $config->get('d500px_consumer_secret'),
+      '#default_value' => $config->get('oauth_consumer_secret'),
     ];
 
     $form['d500px'] = [
@@ -69,16 +69,16 @@ class D500pxSettingsForm extends ConfigFormBase {
       '#description' => t('The following settings connect 500px module with external APIs.'),
     ];
 
-    $form['d500px']['d500px_host'] = [
+    $form['d500px']['host_uri'] = [
       '#type' => 'textfield',
       '#title' => t('500px Host'),
-      '#default_value' => $config->get('d500px_host'),
+      '#default_value' => $config->get('host_uri'),
     ];
 
-    $form['d500px']['d500px_api'] = [
+    $form['d500px']['api_uri'] = [
       '#type' => 'textfield',
       '#title' => t('500px API'),
-      '#default_value' => $config->get('d500px_api'),
+      '#default_value' => $config->get('api_uri'),
     ];
 
     return parent::buildForm($form, $form_state);
@@ -89,10 +89,10 @@ class D500pxSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('d500px.settings')
-      ->set('d500px_consumer_key', $form_state->getValue('d500px_consumer_key'))
-      ->set('d500px_consumer_secret', $form_state->getValue('d500px_consumer_secret'))
-      ->set('d500px_host', $form_state->getValue('d500px_host'))
-      ->set('d500px_api', $form_state->getValue('d500px_api'))
+      ->set('oauth_consumer_key', $form_state->getValue('oauth_consumer_key'))
+      ->set('oauth_consumer_secret', $form_state->getValue('oauth_consumer_secret'))
+      ->set('host_uri', $form_state->getValue('host_uri'))
+      ->set('api_uri', $form_state->getValue('api_uri'))
       ->save();
 
     parent::submitForm($form, $form_state);
