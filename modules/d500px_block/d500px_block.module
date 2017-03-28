@@ -13,3 +13,11 @@ function d500px_block_theme() {
     ),
   );
 }
+
+/**
+ * Implements hook_requirements().
+ */
+//function d500px_block_requirements() {
+  // TODO Add hook_requirements to check if
+  // Api keys and other settings have been set.
+//}
