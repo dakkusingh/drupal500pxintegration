@@ -41,45 +41,45 @@ class D500pxSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('d500px.settings');
 
-    $form['oauth'] = array(
+    $form['oauth'] = [
       '#type' => 'fieldset',
       '#title' => t('OAuth Settings'),
-    );
+    ];
 
-    $form['oauth']['help'] = array(
+    $form['oauth']['help'] = [
       '#type' => '#markup',
-      '#markup' => t('To get your OAuth credentials, you need to register your application on @link.', array('@link' => Link::fromTextAndUrl('https://500px.com/settings/applications', Url::fromUri('https://500px.com/settings/applications'))->toString())),
-    );
+      '#markup' => t('To get your OAuth credentials, you need to register your application on @link.', ['@link' => Link::fromTextAndUrl('https://500px.com/settings/applications', Url::fromUri('https://500px.com/settings/applications'))->toString()]),
+    ];
 
-    $form['oauth']['d500px_consumer_key'] = array(
+    $form['oauth']['d500px_consumer_key'] = [
       '#type' => 'textfield',
       '#title' => t('OAuth Consumer key'),
       '#default_value' => $config->get('d500px_consumer_key'),
-    );
+    ];
 
-    $form['oauth']['d500px_consumer_secret'] = array(
+    $form['oauth']['d500px_consumer_secret'] = [
       '#type' => 'textfield',
       '#title' => t('OAuth Consumer secret'),
       '#default_value' => $config->get('d500px_consumer_secret'),
-    );
+    ];
 
-    $form['d500px'] = array(
+    $form['d500px'] = [
       '#type' => 'fieldset',
       '#title' => t('500px Settings'),
       '#description' => t('The following settings connect 500px module with external APIs.'),
-    );
+    ];
 
-    $form['d500px']['d500px_host'] = array(
+    $form['d500px']['d500px_host'] = [
       '#type' => 'textfield',
       '#title' => t('500px Host'),
       '#default_value' => $config->get('d500px_host'),
-    );
+    ];
 
-    $form['d500px']['d500px_api'] = array(
+    $form['d500px']['d500px_api'] = [
       '#type' => 'textfield',
       '#title' => t('500px API'),
       '#default_value' => $config->get('d500px_api'),
-    );
+    ];
 
     return parent::buildForm($form, $form_state);
   }
