@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * @file
  * Adds D500px theme integrations.
  */
@@ -37,23 +37,4 @@ function d500px_theme() {
       'variables' => array('photos' => NULL),
     ),
   );
-}
-
-/**
- * Preprocess function for a photo.
- *
- * @param array $variables
- */
-function d500px_preprocess_d500px_photo(array &$variables) {
-  //$variables['photo']['#theme'] = 'image121212';
-  //$variables['photo']['#style_name'] = NULL;
-}
-
-/**
- * Preprocess function for photos.
- *
- * @param array $variables
- */
-function d500px_preprocess_d500px_photos(array &$variables) {
-
 }
