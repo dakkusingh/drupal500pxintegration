@@ -1,5 +1,5 @@
-d500px_consumer_key: ''
-d500px_consumer_secret: ''
-d500px_host: 'http://500px.com'
-d500px_api: 'https://api.500px.com'
-d500px_nsfw: FALSE
+oauth_consumer_key: ''
+oauth_consumer_secret: ''
+host_uri: 'http://500px.com'
+api_uri: 'https://api.500px.com'
+nsfw: FALSE

@@ -144,6 +144,20 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
       '#description'        => $this->t('Photo stream to be retrieved. Default fresh_today.'),
     );
 
+    $form['d500px_block_block_common']['username'] = array(
+      '#type'               => 'textfield',
+      '#title'              => t('Username'),
+      '#default_value'      => isset($config['username']) ? $config['username'] : '',
+      '#description'        => t('Selected stream requires a user_id or username parameter.'),
+      '#element_validate'   => array(array($this, 'usernameElementValidator')),
+      '#states' => array(
+        'visible' => array(
+            array(':input[name="settings[d500px_block_block_common][feature]"]' => array('value' => 'user')),
+            array(':input[name="settings[d500px_block_block_common][feature]"]' => array('value' => 'user_friends')),
+        ),
+      ),
+    );
+
     $image_options_available = $this->d500pxintegration->d500px_photo_get_sizes();
     foreach ($image_options_available as $image_option_key => $value) {
       $image_options[$image_option_key] = $value['width'] . 'x' . $value['height'];
@@ -178,19 +192,11 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
       '#description'        => t('Sort photos in the specified order'),
     );
 
-    $form['d500px_block_block_common']['username'] = array(
-      '#type'               => 'textfield',
-      '#title'              => t('Username'),
-      '#default_value'      => isset($config['username']) ? $config['username'] : '',
-      '#description'        => t('All per-user streams require a user_id or username parameter.'),
-      '#element_validate'   => array(array($this, 'usernameElementValidator')),
-    );
-
     /*
     $form['d500px_block_block_common']['nsfw'] = array(
       '#type'               => 'checkbox',
       '#title'              => t('Display NSFW photos?'),
-      '#default_value'      => isset($config['nsfw']) ? $config['nsfw'] : $this->d500pxconfig->get('d500px_nsfw'),
+      '#default_value'      => isset($config['nsfw']) ? $config['nsfw'] : $this->d500pxconfig->get('nsfw'),
       '#description'        => t('Some photos on 500px are "Not Safe For Work" (or children), use with care. By default all NSFW images will be blacked out.'),
     );
     */

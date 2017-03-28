@@ -3,7 +3,6 @@
 /**
  * @file
  * Contains Drupal\D500px\D500pxIntegration.
- *
  */
 
 namespace Drupal\D500px;
@@ -14,32 +13,69 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 /**
- * Primary 500px API implementation class
+ * Primary 500px API implementation class.
+ *
  * @package Drupal\D500px
  */
 class D500pxIntegration {
 
   /**
-   * Constructor for the 500px class
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $config;
+
+  /**
+   * @var string
+   */
+  protected $request_token_url;
+
+  /**
+   * @var string
+   */
+  protected $authorize_url;
+
+  /**
+   * @var string
+   */
+  protected $authenticate_url;
+
+  /**
+   * @var string
+   */
+  protected $access_token_url;
+
+  /**
+   * @var string
+   */
+  protected $generic_url;
+
+  /**
+   * @var string
+   */
+  protected $website_url;
+
+
+  /**
+   * Constructor for the 500px class.
    */
   public function __construct(ConfigFactory $config_factory) {
     // Get the config.
     $this->config = $config_factory->get('d500px.settings');
 
     // Add 500px config.
-    $this->request_token_url = $this->config->get('d500px_api') . '/v1/oauth/request_token';
-    $this->authorize_url = $this->config->get('d500px_api') . '/v1/oauth/authorize';
-    $this->authenticate_url = $this->config->get('d500px_api') . '/v1/oauth/authenticate';
-    $this->access_token_url = $this->config->get('d500px_api') . '/v1/oauth/access_token';
-    $this->generic_url = $this->config->get('d500px_api') . '/v1/';
-    $this->website_url = $this->config->get('d500px_host');
+    $this->request_token_url = $this->config->get('api_uri') . '/v1/oauth/request_token';
+    $this->authorize_url = $this->config->get('api_uri') . '/v1/oauth/authorize';
+    $this->authenticate_url = $this->config->get('api_uri') . '/v1/oauth/authenticate';
+    $this->access_token_url = $this->config->get('api_uri') . '/v1/oauth/access_token';
+    $this->generic_url = $this->config->get('api_uri') . '/v1/';
+    $this->website_url = $this->config->get('host_uri');
 
     // Guzzle oAuth client.
     $stack = HandlerStack::create();
 
     $middleware = new Oauth1([
-      'consumer_key'      => $this->config->get('d500px_consumer_key'),
-      'consumer_secret'   => $this->config->get('d500px_consumer_secret'),
+      'consumer_key'      => $this->config->get('oauth_consumer_key'),
+      'consumer_secret'   => $this->config->get('oauth_consumer_secret'),
 
       // TODO investigate how to fetch tokens from 500px.
       // Until then set the token_secret to null.
@@ -57,7 +93,15 @@ class D500pxIntegration {
 
   }
 
-  public function requestD500px($url, $parameters = array(), $method = "GET") {
+  /**
+   * Generic method to perform a request to 500px servers.
+   *
+   * @param $url
+   * @param array $parameters
+   * @param string $method
+   * @return mixed
+   */
+  public function requestD500px($url, $parameters = array(), $method = 'GET') {
     $response = $this->client->request($method, $url, ['query' => $parameters]);
 
     // TODO Add some checking.
@@ -67,25 +111,37 @@ class D500pxIntegration {
     return json_decode((string) $body);
   }
 
-  // TODO Figure out a better place for these helper functions.
+  /**
+   * Helper method to get photos.
+   *
+   * @param array $parameters
+   * @return array
+   *
+   * TODO Figure out a better place for these helper functions.
+   */
   public function getPhotos($parameters = array()) {
     $photos = $this->requestD500px('photos', $parameters)->photos;
     $themed_photos = NULL;
 
     foreach ($photos as $photo_obj) {
-      $themed_photo = array(
+      $themed_photos[] = array(
         '#theme' => 'd500px_photo',
         '#photo' => $this->preparePhoto($photo_obj),
         '#photo_page_url' => $this->website_url . $photo_obj->url,
       );
-
-      $themed_photos[] = $themed_photo;
     }
 
     return array('#theme' => 'd500px_photos', '#photos' => $themed_photos);
   }
 
-  // TODO Figure out a better place for these helper functions.
+  /**
+   * Helper method to prepare a photo just after we retrieved it from 500px.
+   *
+   * @param $photo_obj
+   * @return array
+   *
+   * TODO Figure out a better place for these helper functions.
+   */
   public function preparePhoto($photo_obj) {
     $size = $photo_obj->images[0]->size;
     $title = $photo_obj->name;

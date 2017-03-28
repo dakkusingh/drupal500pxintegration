@@ -1,5 +1,5 @@
 {
-  "name": "drupal/500px",
+  "name": "drupal/d500px",
   "description": "500px Integration for Drupal provides API access to 500px web functionality and content.",
   "type": "drupal-module",
   "require": {

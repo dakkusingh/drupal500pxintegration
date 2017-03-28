@@ -1,6 +1,8 @@
 name: 500px Integration
-type: module
 description: '500px Integration for Drupal provides API access to 500px web functionality and content.'
 package: Media
-version: VERSION
+
+configure: d500px.settings
+
+type: module
 core: 8.x
