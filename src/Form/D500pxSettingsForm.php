@@ -9,6 +9,8 @@ namespace Drupal\d500px\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 
 /**
  * Implements the 500px Settings form controller.
@@ -42,6 +44,11 @@ class D500pxSettingsForm extends ConfigFormBase {
     $form['oauth'] = array(
       '#type' => 'fieldset',
       '#title' => t('OAuth Settings'),
+    );
+
+    $form['oauth']['help'] = array(
+      '#type' => '#markup',
+      '#markup' => t('To get your OAuth credentials, you need to register your application on @link.', array('@link' => Link::fromTextAndUrl('https://500px.com/settings/applications', Url::fromUri('https://500px.com/settings/applications'))->toString())),
     );
 
     $form['oauth']['d500px_consumer_key'] = array(
