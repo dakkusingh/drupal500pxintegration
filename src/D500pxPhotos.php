@@ -20,7 +20,7 @@ class D500pxPhotos {
   /**
    * @var \Drupal\d500px\D500pxHelpers
    */
-  protected $d500pxhelpers;
+  public $d500pxhelpers;
 
   /**
    * @var \Drupal\d500px\D500pxIntegration
