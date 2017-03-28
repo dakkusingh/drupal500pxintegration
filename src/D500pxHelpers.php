@@ -30,7 +30,6 @@ class D500pxHelpers {
     $this->d500pxintegration = $d500pxintegration;
   }
 
-
   /**
    * Helper method to get photos.
    *
@@ -59,8 +58,6 @@ class D500pxHelpers {
    *
    * @param $photo_obj
    * @return array
-   *
-   * TODO Figure out a better place for these helper functions.
    */
   public function preparePhoto($photo_obj) {
     $size = $photo_obj->images[0]->size;
@@ -70,8 +67,8 @@ class D500pxHelpers {
     // TODO Add NSFW image logic.
     $nsfw = $photo_obj->nsfw;
 
-    $d500px_photo_sizes_array = $this->d500px_photo_get_sizes();
-    $d500px_photo_size_array = $d500px_photo_sizes_array[$size];
+    $photo_sizes = $this->photoGetSizes();
+    $photo_size = $photo_sizes[$size];
 
     $attributes['class'][] = 'd500px_photo_size_'. $size;
     $attributes['class'][] = 'd500px_photo';
@@ -83,18 +80,21 @@ class D500pxHelpers {
       '#uri' => $img_url,
       '#alt' => $title,
       '#title' => $title,
-      '#width' => $d500px_photo_size_array['height'],
-      '#height' => $d500px_photo_size_array['width'],
+      '#width' => $photo_size['height'],
+      '#height' => $photo_size['width'],
       '#attributes' => array('class' => $attributes['class']),
     );
 
     return $image;
   }
 
-  // TODO Figure out a better place for these helper functions.
-  // TODO Update naming conventions to match accorgingly.
-  public function d500px_photo_get_sizes() {
-    $d500px_photo_sizes_array = array(
+  /**
+   * Helper method to get available photo sizes.
+   *
+   * @return array
+   */
+  public function photoGetSizes() {
+    $photo_sizes = array(
       1 => array('height' => 70, 'width' => 70),
       2 => array('height' => 140, 'width' => 140),
       3 => array('height' => 280, 'width' => 280),
@@ -104,13 +104,16 @@ class D500pxHelpers {
       600 => array('height' => 600, 'width' => 600),
     );
 
-    return $d500px_photo_sizes_array;
+    return $photo_sizes;
   }
 
-  // TODO Figure out a better place for these helper functions.
-  // TODO Update naming conventions to match accorgingly.
-  public function d500px_available_features() {
-    $features_array = array(
+  /**
+   * Helper method to get available features.
+   *
+   * @return array
+   */
+  public function availableFeatures() {
+    $features = array(
       'popular' => t('Popular Photos.'),
       'highest_rated' => t('Highest rated photos.'),
       'upcoming' => t('Upcoming photos.'),
@@ -122,13 +125,16 @@ class D500pxHelpers {
       'user_friends' => t('Photos by users the specified user is following.'),
      );
 
-    return $features_array;
+    return $features;
   }
 
-  // TODO Figure out a better place for these helper functions.
-  // TODO Update naming conventions to match accorgingly.
-  public function d500px_available_sort_options() {
-    $sort_options_array = array(
+  /**
+   * Helper method to get available sort options.
+   *
+   * @return array
+   */
+  public function availableSortOptions() {
+    $sort_options = array(
       'created_at' => t('Time of upload, most recent first'),
       'rating' => t('Rating, highest rated first'),
       'times_viewed' => t('View count, most viewed first'),
@@ -138,13 +144,16 @@ class D500pxHelpers {
       'taken_at' => t('Metadata date, most recent first'),
     );
 
-    return $sort_options_array;
+    return $sort_options;
   }
 
-  // TODO Figure out a better place for these helper functions.
-  // TODO Update naming conventions to match accorgingly.
-  function d500px_available_categories() {
-    $categories_array = array(
+  /**
+   * Helper method to get available categories.
+   *
+   * @return array
+   */
+  public function availableCategories() {
+    $categories = array(
       '- All -' => '- All -',
       0 => 'Uncategorized',
       10 => 'Abstract',
@@ -176,7 +185,7 @@ class D500pxHelpers {
       25 => 'Wedding',
     );
 
-    return $categories_array;
+    return $categories;
   }
 
 }

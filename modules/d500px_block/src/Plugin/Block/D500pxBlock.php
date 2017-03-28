@@ -139,7 +139,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
     $form['d500px_block_block_common']['feature'] = array(
       '#type'               => 'select',
       '#title'              => $this->t('Photo stream to be retrieved?'),
-      '#options'            => $this->d500pxintegration->d500px_available_features(),
+      '#options'            => $this->d500pxintegration->availableFeatures(),
       '#default_value'      => isset($config['feature']) ? $config['feature'] : 'fresh_today',
       '#description'        => $this->t('Photo stream to be retrieved. Default fresh_today.'),
     );
@@ -158,7 +158,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
       ),
     );
 
-    $image_options_available = $this->d500pxintegration->d500px_photo_get_sizes();
+    $image_options_available = $this->d500pxintegration->photoGetSizes();
     foreach ($image_options_available as $image_option_key => $value) {
       $image_options[$image_option_key] = $value['width'] . 'x' . $value['height'];
     }
@@ -171,7 +171,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
       '#description'        => $this->t('The photo size to be displayed.'),
     );
 
-    $available_categories = $this->d500pxintegration->d500px_available_categories();
+    $available_categories = $this->d500pxintegration->availableCategories();
     foreach ($available_categories as $key => $value) {
       $categories[$value] = $this->t($value);
     }
@@ -187,7 +187,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
     $form['d500px_block_block_common']['sort'] = array(
       '#type'               => 'select',
       '#title'              => $this->t('Sort photos in the specified order'),
-      '#options'            => $this->d500pxintegration->d500px_available_sort_options(),
+      '#options'            => $this->d500pxintegration->availableSortOptions(),
       '#default_value'      => isset($config['sort']) ? $config['sort'] : 'created_at',
       '#description'        => t('Sort photos in the specified order'),
     );
