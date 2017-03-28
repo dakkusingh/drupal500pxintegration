@@ -161,14 +161,12 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
       '#description'        => t('Sort photos in the specified order'),
     );
 
-    /*
     $form['d500px_block_block_common']['nsfw'] = array(
       '#type'               => 'checkbox',
       '#title'              => t('Display NSFW photos?'),
-      '#default_value'      => isset($config['nsfw']) ? $config['nsfw'] : $this->d500pxconfig->get('nsfw'),
+      '#default_value'      => isset($config['nsfw']) ? $config['nsfw'] : FALSE,
       '#description'        => t('Some photos on 500px are "Not Safe For Work" (or children), use with care. By default all NSFW images will be blacked out.'),
     );
-    */
 
     return $form;
   }
@@ -189,7 +187,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['rpp'] = $form_state->getValue(array('d500px_block_block_common', 'rpp'));
     $this->configuration['feature'] = $form_state->getValue(array('d500px_block_block_common', 'feature'));
-    // $this->configuration['nsfw'] = $form_state->getValue(array('d500px_block_block_common', 'nsfw'));
+    $this->configuration['nsfw'] = $form_state->getValue(array('d500px_block_block_common', 'nsfw'));
     $this->configuration['image_size'] = $form_state->getValue(array('d500px_block_block_common', 'image_size'));
     $this->configuration['only'] = $form_state->getValue(array('d500px_block_block_common', 'only'));
     $this->configuration['sort'] = $form_state->getValue(array('d500px_block_block_common', 'sort'));
