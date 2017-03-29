@@ -70,7 +70,7 @@ class D500pxBlock extends BlockBase implements BlockPluginInterface {
 
     // Get some pics.
     // TODO Error handling, what if $content is NULL?
-    $content = $this->d500pxphotos->getPhotos($params);
+    $content = $this->d500pxphotos->getPhotos($params, $config['nsfw']);
 
     // Check if there are any photos firstly.
     if (empty($content)) {

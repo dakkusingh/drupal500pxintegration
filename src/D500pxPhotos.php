@@ -42,16 +42,13 @@ class D500pxPhotos {
    * @param array $parameters
    * @return array
    */
-  public function getPhotos($parameters = array()) {
+  public function getPhotos($parameters = array(), $nsfw = FALSE) {
     $photos = $this->d500pxintegration->requestD500px('photos', $parameters)->photos;
     $themed_photos = NULL;
 
     foreach ($photos as $photo_obj) {
-      $themed_photos[] = array(
-        '#theme' => 'd500px_photo',
-        '#photo' => $this->d500pxhelpers->preparePhoto($photo_obj),
-        '#photo_page_url' => $this->d500pxintegration->website_url . $photo_obj->url,
-      );
+      $photo_obj->photo_page_url = $this->d500pxintegration->website_url . $photo_obj->url;
+      $themed_photos[] = $this->d500pxhelpers->preparePhoto($photo_obj, $nsfw);
     }
 
     return array('#theme' => 'd500px_photos', '#photos' => $themed_photos);

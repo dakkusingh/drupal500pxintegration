@@ -31,7 +31,7 @@ function d500px_help($route_name, RouteMatchInterface $route_match) {
 function d500px_theme() {
   return array(
     'd500px_photo' => array(
-      'variables' => array('photo' => NULL, 'photo_page_url' => NULL),
+      'variables' => array('photo' => NULL, 'photo_page_url' => NULL, 'attributes' => NULL, 'blackout_nsfw' => NULL),
     ),
     'd500px_photos' => array(
       'variables' => array('photos' => NULL),

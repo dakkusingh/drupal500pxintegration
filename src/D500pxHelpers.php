@@ -20,22 +20,19 @@ class D500pxHelpers {
    * @param $photo_obj
    * @return array
    */
-  public function preparePhoto($photo_obj) {
+  public function preparePhoto($photo_obj, $nsfw = FALSE) {
     $size = $photo_obj->images[0]->size;
     $title = $photo_obj->name;
     $img_url = $photo_obj->image_url;
 
-    // TODO Add NSFW image logic.
-    $nsfw = $photo_obj->nsfw;
-
     $photo_sizes = $this->photoGetSizes();
     $photo_size = $photo_sizes[$size];
 
-    $attributes['class'][] = 'd500px_photo_size_'. $size;
-    $attributes['class'][] = 'd500px_photo';
-    $attributes['class'] = implode(' ', $attributes['class']);
+    //$attributes['class'][] = 'd500px_photo_size_'. $size;
+    //$attributes['class'][] = 'd500px_photo';
+    //$attributes['class'] = implode(' ', $attributes['class']);
 
-    $image = array(
+    $photo = array(
       '#theme' => 'image',
       '#style_name' => NULL,
       '#uri' => $img_url,
@@ -43,10 +40,35 @@ class D500pxHelpers {
       '#title' => $title,
       '#width' => $photo_size['height'],
       '#height' => $photo_size['width'],
-      '#attributes' => array('class' => $attributes['class']),
+      //'#attributes' => array('class' => $attributes['class']),
     );
 
-    return $image;
+    $blackout_nsfw = FALSE;
+    
+    // NSFW image logic.
+    if ($photo_obj->nsfw == TRUE && $nsfw == FALSE) {
+      $blackout_nsfw = TRUE;
+      $classes[] = 'd500px-nsfw';
+    }
+
+    $classes[] = 'd500px-photo-size-'. $size;
+    $class = implode(' ', $classes);
+
+
+    $themed_photo = array(
+      '#theme' => 'd500px_photo',
+      '#photo' => $photo,
+      '#photo_page_url' => $photo_obj->photo_page_url,
+      '#attributes' => array('class' => $class),
+      '#blackout_nsfw' => $blackout_nsfw,
+      '#attached' => array(
+        'library' => array(
+          'd500px/d500px.photos',
+        ),
+      ),
+    );
+
+    return $themed_photo;
   }
 
   /**
