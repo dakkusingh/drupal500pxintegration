@@ -16,8 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   description = @Translation("Allow users to embed a picture from 500px website in an editable content area."),
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_MARKUP_LANGUAGE,
  *   settings = {
- *     "d500px_filter_width" = 200,
- *     "d500px_filter_height" = 200,
+ *     "d500px_filter_imagesize" = 200,
  *   },
  * )
  */
@@ -27,6 +26,7 @@ class D500pxFilter extends FilterBase {
    * {@inheritdoc}
    */
   public function process($text, $langcode) {
+    //ksm($text);
     $new_text = preg_replace_callback(
       '/\[d500px((?:\s).*)]/i',
       function ($matches) {
@@ -44,10 +44,16 @@ class D500pxFilter extends FilterBase {
             return $retval;
           }
 
-          $id = $vars['photoid'];
+          $photoid = $vars['photoid'];
 
           $d500pxphotos = \Drupal::service('d500px.d500pxphotos');
-          $content = $d500pxphotos->getPhotos($params, $config['nsfw']);
+
+          $params = array(
+            'image_size'    => $this->getSize($vars),
+          );
+          ksm($photoid);
+          $content = $d500pxphotos->getPhotoById($photoid, $params);
+
           if (!is_array($content)) {
             return $retval;
           }
@@ -67,19 +73,11 @@ class D500pxFilter extends FilterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     // TODO refactor this to use standard sizes from D500pxHelpers::photoGetSizes
-    $form['d500px_filter_width'] = [
+    $form['d500px_filter_imagesize'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Default width of embed'),
-      '#description' => $this->t('The default width of the embedded 500px photo (in pixels) to use if not specified in the embed tag.'),
-      '#default_value' => $this->settings['d500px_filter_width'],
-    ];
-
-    // TODO refactor this to use standard sizes from D500pxHelpers::photoGetSizes
-    $form['d500px_filter_height'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Default height of embed'),
-      '#description' => $this->t('The default height of the embedded 500px photo (in pixels) to use if not specified in the embed tag.'),
-      '#default_value' => $this->settings['d500px_filter_height'],
+      '#title' => $this->t('Default imagesize of embed'),
+      '#description' => $this->t('The default size of the embedded 500px photo (size ID) to use if not specified in the embed tag.'),
+      '#default_value' => $this->settings['d500px_filter_imagesize'],
     ];
     return $form;
   }
@@ -90,16 +88,33 @@ class D500pxFilter extends FilterBase {
   public function tips($long = FALSE) {
     if ($long) {
       return $this->t(
-        'Embed 500px photo using @embed. Values for width and height are optional, if left off the default values configured on the %filter input filter will be used',
+        'Embed 500px photo using @embed. Values for imagesize is optional, if left off the default values configured on the %filter input filter will be used',
         [
-          '@embed' => '[d500px photoid=<photo_id> width=<width> height=<height>]',
+          '@embed' => '[d500px photoid=<photo_id> imagesize=<imagesize>]',
           '%filter' => 'Embed 500px photo',
         ]
       );
     }
     else {
-      return $this->t('Embed 500px photo using @embed', ['@embed' => '[d500px photoid=<photo_id> width=<width> height=<height>]']);
+      return $this->t('Embed 500px photo using @embed', ['@embed' => '[d500px photoid=<photo_id> imagesize=<imagesize>]']);
     }
+  }
+
+  /**
+   * Returns the set imagesize or the default.
+   *
+   * @param array $vars
+   *   An array of filter arguments.
+   *
+   * @return int
+   *   The imagesize for the photo.
+   */
+  protected function getSize(array $vars) {
+    if (isset($vars['imagesize']) && is_numeric($vars['imagesize'])) {
+      return $vars['imagesize'];
+    }
+
+    return $this->settings['d500px_filter_imagesize'];
   }
 
 }
