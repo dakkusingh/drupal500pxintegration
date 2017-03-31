@@ -54,4 +54,18 @@ class D500pxPhotos {
     return array('#theme' => 'd500px_photos', '#photos' => $themed_photos);
   }
 
+  /**
+   * Helper method to get photo by id.
+   *
+   * @param array $parameters
+   * @return array
+   */
+  public function getPhotoById($photoid, $parameters = array(), $nsfw = FALSE) {
+    $photo_obj = $this->d500pxintegration->requestD500px('photos/' . $photoid , $parameters)->photo;
+    $photo_obj->photo_page_url = $this->d500pxintegration->website_url . $photo_obj->url;
+    $themed_photo = $this->d500pxhelpers->preparePhoto($photo_obj, $nsfw);
+
+    return $themed_photo;
+  }
+
 }
