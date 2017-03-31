@@ -26,7 +26,6 @@ class D500pxFilter extends FilterBase {
    * {@inheritdoc}
    */
   public function process($text, $langcode) {
-    //ksm($text);
     $new_text = preg_replace_callback(
       '/\[d500px((?:\s).*)]/i',
       function ($matches) {
@@ -39,19 +38,17 @@ class D500pxFilter extends FilterBase {
             $vars[Xss::filter($name)] = Xss::filter($val);
           }
 
-          // Check if the source was set.
+          // Check if the photoid was set.
           if (!isset($vars['photoid'])) {
             return $retval;
           }
 
           $photoid = $vars['photoid'];
-
-          $d500pxphotos = \Drupal::service('d500px.d500pxphotos');
-
           $params = array(
             'image_size'    => $this->getSize($vars),
           );
-          ksm($photoid);
+
+          $d500pxphotos = \Drupal::service('d500px.d500pxphotos');
           $content = $d500pxphotos->getPhotoById($photoid, $params);
 
           if (!is_array($content)) {
