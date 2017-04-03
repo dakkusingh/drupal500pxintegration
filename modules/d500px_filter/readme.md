@@ -2,13 +2,13 @@
 This module provides configurable filter to display 500px images. Allow users to embed a picture from 500px website in an editable content area.
 
 ## Filter Syntax
-**photoid**
+- **photoid
 ID of the photo the user wishes to embed. photoID is often part of the image URL, example:
 ```
 https://500px.com/photo/98889053/
 ```
 
-**imagesize**
+- **imagesize
 Values for imagesize is optional, if left off the default values configured on the input filter settings will be used.
 
 ### Filter Usage
