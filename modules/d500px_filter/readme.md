@@ -1,11 +1,25 @@
-## Image URLs and Image Sizes
+# 500px Integration Filter 
+This module provides configurable filter to display 500px images. Allow users to embed a picture from 500px website in an editable content area.
+
+## Filter Syntax
+** photoid
+ID of the photo the user wishes to embed. photoID is often part of the image URL, example:
+```
+https://500px.com/photo/98889053/
+```
+
+** imagesize
+Values for imagesize is optional, if left off the default values configured on the input filter settings will be used.
 
 ### Filter Usage
-
 ```
- [500px photoid=12345 photosize=200]
+[d500px photoid=<photo_id> imagesize=<imagesize>]
+```
+```
+ [500px photoid=12345 imagesize=200]
 ```
 
+## Image Sizes Available from 500px
 ### Standard Sizes
 
 These are the standard cropped sizes:
@@ -40,4 +54,3 @@ These are the standard uncropped sizes:
   <tr><td>1600</td><td>1600px on the longest edge</td></tr>
   <tr><td>2048</td><td>2048px on the longest edge</td></tr>
 </table>
-***
