@@ -44,7 +44,7 @@ class D500pxWysiwyg extends CKEditorPluginBase {
   public function getButtons() {
     $path = drupal_get_path('module', 'd500px_wysiwyg') . '/plugin';
     return array(
-      'd500px_add_photo' => array(
+      'd500px_wysiwyg_add_button' => array(
         'label' => t('500px Photo'),
         'image' => $path . '/icon.png',
       ),

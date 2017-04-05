@@ -1,9 +1,7 @@
 d500px_wysiwyg.photo_dialog:
-  path: '/d500px-wysiwyg/dialog/{filter_format}'
+  path: '/d500px-wysiwyg/dialog/{editor}'
   defaults:
     _form: '\Drupal\d500px_wysiwyg\Form\D500pxWysiwygDialog'
     _title: '500px Photo Form'
-  options:
-    _theme: ajax_base_page
   requirements:
-    _entity_access: 'filter_format.use'
+    _entity_access: 'editor.use'
