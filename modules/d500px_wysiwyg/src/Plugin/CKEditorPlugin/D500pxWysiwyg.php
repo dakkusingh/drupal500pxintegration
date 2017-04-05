@@ -6,7 +6,7 @@ use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\editor\Entity\Editor;
 
 /**
- * Defines the "drupallink" plugin.
+ * Defines the "d500px_wysiwyg" plugin.
  *
  * @CKEditorPlugin(
  *   id = "d500px_wysiwyg",
@@ -44,7 +44,7 @@ class D500pxWysiwyg extends CKEditorPluginBase {
   public function getButtons() {
     $path = drupal_get_path('module', 'd500px_wysiwyg') . '/plugin';
     return array(
-      'd500px_photo' => array(
+      'd500px_add_photo' => array(
         'label' => t('500px Photo'),
         'image' => $path . '/icon.png',
       ),
