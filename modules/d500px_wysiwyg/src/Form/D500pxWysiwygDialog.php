@@ -9,6 +9,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\editor\Ajax\EditorDialogSave;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
+use Drupal\d500px\D500pxHelpers;
 
 /**
  * A class for providing 500px photo dialog.
@@ -34,19 +35,31 @@ class D500pxWysiwygDialog extends FormBase {
       $user_input = $form_state->getUserInput();
       $input = isset($user_input['editor_object']) ? $user_input['editor_object'] : array();
 
+      $d500px_helpers = \Drupal::service('d500px.d500pxhelpers');
+      $image_options_available = $d500px_helpers->photoGetSizes();
+      foreach ($image_options_available as $image_option_key => $value) {
+        $image_options[$image_option_key] = $value['width'] . 'x' . $value['height'];
+      }
+
       $form['#tree'] = TRUE;
       // TODO Is this needed?
       // $form['#attached']['library'][] = 'editor/drupal.editor.dialog';
       $form['#prefix'] = '<div id="d500px-wysiwyg-dialog-form">';
       $form['#suffix'] = '</div>';
 
-      // Everything under the "attributes" key is merged directly into the
-      // generated link tag's attributes.
-      $form['attributes']['href'] = array(
-        '#title' => $this->t('URL'),
+      $form['attributes']['photoid'] = array(
+        '#title' => $this->t('Photo ID'),
         '#type' => 'textfield',
-        '#default_value' => isset($input['href']) ? $input['href'] : '',
-        '#maxlength' => 2048,
+        '#default_value' => isset($input['photoid']) ? $input['photoid'] : '',
+        '#maxlength' => 12,
+      );
+
+      $form['attributes']['imagesize'] = array(
+        '#title' => $this->t('Thumbnail Size'),
+        '#type' => 'select',
+        '#options' => $image_options,
+        '#default_value' => isset($input['imagesize']) ? $input['imagesize'] : '',
+        '#description'        => $this->t('The photo size to be displayed.'),
       );
 
       $form['actions'] = array(
