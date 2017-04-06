@@ -44,9 +44,9 @@
       var self = this;
 
       var modalSaveWrapper = function (values) {
-        //editor.fire('saveSnapshot');
-        //self.modalSave(editor, values);
-        //editor.fire('saveSnapshot');
+        editor.fire('saveSnapshot');
+        self.modalSave(editor, values);
+        editor.fire('saveSnapshot');
       };
 
       editor.addCommand('d500px_wysiwyg_add_command', {
@@ -75,9 +75,15 @@
      */
     registerWidget: function (editor) {
       var self = this;
-      editor.widgets.add('d500px_wysiwyg', {
-        mask: true
-      });
+      editor.widgets.add('d500px_wysiwyg');
+    },
+
+    /**
+     * A callback that is triggered when the modal is saved.
+     */
+    modalSave: function (editor, values) {
+      // TODO This doesnt appear to get called.
+      console.log(JSON.stringify(values));
     },
 
     /**
@@ -94,6 +100,5 @@
       });
     }
   });
-
 
 })(jQuery);
