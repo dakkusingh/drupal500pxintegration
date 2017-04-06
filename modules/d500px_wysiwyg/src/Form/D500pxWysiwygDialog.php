@@ -42,19 +42,21 @@ class D500pxWysiwygDialog extends FormBase {
       }
 
       $form['#tree'] = TRUE;
-      // TODO Is this needed?
-      // $form['#attached']['library'][] = 'editor/drupal.editor.dialog';
+      // Ensure relevant dialog libraries are attached.
+      $form['#attached']['library'][] = 'editor/drupal.editor.dialog';
+
       $form['#prefix'] = '<div id="d500px-wysiwyg-dialog-form">';
       $form['#suffix'] = '</div>';
 
-      $form['attributes']['photoid'] = array(
+      $form['d500px_photo']['photoid'] = array(
         '#title' => $this->t('Photo ID'),
         '#type' => 'textfield',
         '#default_value' => isset($input['photoid']) ? $input['photoid'] : '',
         '#maxlength' => 12,
+        '#required' => TRUE,
       );
 
-      $form['attributes']['imagesize'] = array(
+      $form['d500px_photo']['imagesize'] = array(
         '#title' => $this->t('Thumbnail Size'),
         '#type' => 'select',
         '#options' => $image_options,

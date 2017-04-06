@@ -44,9 +44,10 @@
       var self = this;
 
       var modalSaveWrapper = function (values) {
-        editor.fire('saveSnapshot');
+        //editor.fire('saveSnapshot');
+        //console.log('hello');
         self.modalSave(editor, values);
-        editor.fire('saveSnapshot');
+        //editor.fire('saveSnapshot');
       };
 
       editor.addCommand('d500px_wysiwyg_add_command', {
@@ -55,9 +56,12 @@
           // of the d500px_add_photo widget, extract it's values so they can be
           // sent to the server to prime the configuration form.
           var existingValues = {};
-          if (editor.widgets.focused && editor.widgets.focused.name == 'd500px_wysiwyg') {
-            existingValues = editor.widgets.focused.data.json;
-          }
+
+          // TODO Fix the previous selection.
+          // self.getSelectedLink(editor);
+          // if (editor.widgets.focused && editor.widgets.focused.name == 'd500px_wysiwyg') {
+          //  existingValues = editor.widgets.focused.data.json;
+          // }
 
           var dialogSettings = {
             title: Drupal.t('Add 500px Photo'),
@@ -82,8 +86,25 @@
      * A callback that is triggered when the modal is saved.
      */
     modalSave: function (editor, values) {
-      // TODO This doesnt appear to get called.
-      console.log(JSON.stringify(values));
+      var photoid = values['d500px_photo']['photoid'];
+      var imagesize = values['d500px_photo']['imagesize'];
+      var d500px_token = "[d500px photoid=" + photoid + " imagesize=" + imagesize + "]";
+      editor.insertHtml(d500px_token);
+    },
+
+    /**
+    *   The selected link element, or null.
+    */
+    getSelectedLink: function (editor) {
+      var selection = editor.getSelection();
+      var range = selection.getRanges();
+      // TODO Fix the token selection.
+      console.log(range);
+      /*
+      if (range) {
+
+      }*/
+      return null;
     },
 
     /**
