@@ -213,10 +213,15 @@ function d500px_blocks_block_commonform($previous_settings) {
     //'#required'           => TRUE,
   );
 
+  $image_options_available = d500px_photo_get_sizes();
+  foreach ($image_options_available as $image_option_key => $value) {
+    $image_options[$image_option_key] = $value['width'] . 'x' . $value['height'];
+  }
+
   $form['d500px_blocks_block_common']['image_size'] = array(
     '#type'               => 'select',
     '#title'              => t('Thumbnail size:'),
-    '#options'            => array(0 => '70px', 1 => '140px', 2 => '280px'),
+    '#options'            => $image_options,
     '#default_value'      => $image_size,
     '#description'        => t('The photo size to be returned.'),
     //'#required'           => TRUE,
