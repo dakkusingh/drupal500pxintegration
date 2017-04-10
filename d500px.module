@@ -75,7 +75,7 @@ function d500px_img($photo_array, $size = 1, $nsfw = 0, $attributes = array()) {
     $img_url = drupal_get_path('module', 'd500px') . '/images/nsfw.png'; // TODO: this can be done better
   }
   else {
-    $img_url = d500px_photo_img($photo_array, $size);
+    $img_url = $photo_array['image_url'];
   }
 
   $title = $photo_array['name'];
@@ -100,14 +100,6 @@ function d500px_photo_get_sizes() {
 
   return $d500px_photo_sizes_array;
 }
-
-
-
-
-function d500px_photo_img($photo_array, $size) {
-  return $photo_array['image_url'][$size];
-}
-
 
 
 /**

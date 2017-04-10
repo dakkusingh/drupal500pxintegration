@@ -128,7 +128,7 @@ function d500px_blocks_block_contents($delta) {
   $params = array(
     'feature'       => $block_settings['feature'],
     'rpp'           => $block_settings['rpp'],
-    'image_size[]'  => range(1, 4), // better to get all sizes and deal with requested size at theme level
+    'image_size'    => $block_settings['image_size'],
     'sort'          => $block_settings['sort'],
   );
 
