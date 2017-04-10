@@ -170,14 +170,14 @@ function theme_d500px_photos($variables) {
 
 function d500px_available_sort_options() {
   $sort_options_array = array(
-                              'created_at' => t('Time of upload, most recent first'),
-                              'rating' => t('Rating, highest rated first'),
-                              'times_viewed' => t('View count, most viewed first'),
-                              'votes_count' => t('Votes count, most voted first'),
-                              'favorites_count' => t('Favorites count, most favorited first'),
-                              'comments_count' => t('Comments count, most commented first'),
-                              'taken_at' => t('Metadata date, most recent first'),
-                              );
+    'created_at' => t('Time of upload, most recent first'),
+    'rating' => t('Rating, highest rated first'),
+    'times_viewed' => t('View count, most viewed first'),
+    'votes_count' => t('Votes count, most voted first'),
+    'favorites_count' => t('Favorites count, most favorited first'),
+    'comments_count' => t('Comments count, most commented first'),
+    'taken_at' => t('Metadata date, most recent first'),
+  );
 
   return $sort_options_array;
 }
@@ -186,36 +186,36 @@ function d500px_available_sort_options() {
 
 function d500px_available_categories() {
   $categories_array = array(
-                            '- All -' => t('- All -'),
-                            'Abstract' => t('Abstract'),
-                            'Animals' => t('Animals'),
-                            'Black and White' => t('Black and White'),
-                            'Celebrities' => t('Celebrities'),
-                            'City and Architecture' => t('City and Architecture'),
-                            'Commercial' => t('Commercial'),
-                            'Concert' => t('Concert'),
-                            'Family' => t('Family'),
-                            'Fashion' => t('Fashion'),
-                            'Film' => t('Film'),
-                            'Fine Art' => t('Fine Art'),
-                            'Food' => t('Food'),
-                            'Journalism' => t('Journalism'),
-                            'Landscapes' => t('Landscapes'),
-                            'Macro' => t('Macro'),
-                            'Nature' => t('Nature'),
-                            'Nude' => t('Nude'),
-                            'People' => t('People'),
-                            'Performing Arts' => t('Performing Arts'),
-                            'Sport' => t('Sport'),
-                            'Still Life' => t('Still Life'),
-                            'Street' => t('Street'),
-                            'Transporation' => t('Transporation'),
-                            'Travel' => t('Travel'),
-                            'Underwater' => t('Underwater'),
-                            'Urban Exploration' => t('Urban Exploration'),
-                            'Wedding' => t('Wedding'),
-                            'Uncategorized' => t('Uncategorized'),
-                            );
+    '- All -' => t('- All -'),
+    'Abstract' => t('Abstract'),
+    'Animals' => t('Animals'),
+    'Black and White' => t('Black and White'),
+    'Celebrities' => t('Celebrities'),
+    'City and Architecture' => t('City and Architecture'),
+    'Commercial' => t('Commercial'),
+    'Concert' => t('Concert'),
+    'Family' => t('Family'),
+    'Fashion' => t('Fashion'),
+    'Film' => t('Film'),
+    'Fine Art' => t('Fine Art'),
+    'Food' => t('Food'),
+    'Journalism' => t('Journalism'),
+    'Landscapes' => t('Landscapes'),
+    'Macro' => t('Macro'),
+    'Nature' => t('Nature'),
+    'Nude' => t('Nude'),
+    'People' => t('People'),
+    'Performing Arts' => t('Performing Arts'),
+    'Sport' => t('Sport'),
+    'Still Life' => t('Still Life'),
+    'Street' => t('Street'),
+    'Transporation' => t('Transporation'),
+    'Travel' => t('Travel'),
+    'Underwater' => t('Underwater'),
+    'Urban Exploration' => t('Urban Exploration'),
+    'Wedding' => t('Wedding'),
+    'Uncategorized' => t('Uncategorized'),
+  );
 
   return $categories_array;
 }
@@ -224,16 +224,16 @@ function d500px_available_categories() {
 
 function d500px_available_features() {
   $features_array = array(
-                          'popular' => t('Popular Photos.'),
-                          'highest_rated' => t('Highest rated photos.'),
-                          'upcoming' => t('Upcoming photos.'),
-                          'editors' => t('Editors Choice.'),
-                          'fresh_today' => t('Fresh Today.'),
-                          'fresh_yesterday' => t('Fresh Yesterday.'),
-                          'fresh_week' => t('Fresh This Week.'),
-                          'user' => t('Photos by specified user.'),
-                          'user_friends' => t('Photos by users the specified user is following.'),
-                         );
+    'popular' => t('Popular Photos.'),
+    'highest_rated' => t('Highest rated photos.'),
+    'upcoming' => t('Upcoming photos.'),
+    'editors' => t('Editors Choice.'),
+    'fresh_today' => t('Fresh Today.'),
+    'fresh_yesterday' => t('Fresh Yesterday.'),
+    'fresh_week' => t('Fresh This Week.'),
+    'user' => t('Photos by specified user.'),
+    'user_friends' => t('Photos by users the specified user is following.'),
+  );
 
   return $features_array;
 }
