@@ -86,7 +86,7 @@ function d500px_img($photo_array, $size = 1, $nsfw = 0, $attributes = array()) {
 
 
 
-function d500px_photo_get_sizes(){
+function d500px_photo_get_sizes() {
 
   $d500px_photo_sizes_array = array(
     1 => array('height' => 70, 'width' => 70),
