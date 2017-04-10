@@ -235,7 +235,13 @@ function d500px_blocks_block_commonform($previous_settings) {
     '#default_value'      => $username,
     //'#required'           => FALSE,
     '#description'        => t('All per-user streams require a user_id or username parameter.'),
-    '#element_validate'   => array('d500px_blocks_block_commonform_username_validate'),   
+    '#element_validate'   => array('d500px_blocks_block_commonform_username_validate'),
+    '#states' => array(
+      'visible' => array(
+          array(':input[name="feature"]' => array('value' => 'user')),
+          array(':input[name="feature"]' => array('value' => 'user_friends')),
+      ),
+    ),
   );
 
   $form['d500px_blocks_block_common']['only'] = array(
