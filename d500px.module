@@ -89,10 +89,13 @@ function d500px_img($photo_array, $size = 1, $nsfw = 0, $attributes = array()) {
 function d500px_photo_get_sizes(){
 
   $d500px_photo_sizes_array = array(
-    0 => array('height' => 70, 'width' => 70),
-    1 => array('height' => 140, 'width' => 140),
-    2 => array('height' => 280, 'width' => 280),
-    3 => array('height' => 600, 'width' => 900),
+    1 => array('height' => 70, 'width' => 70),
+    2 => array('height' => 140, 'width' => 140),
+    3 => array('height' => 280, 'width' => 280),
+    100 => array('height' => 100, 'width' => 100),
+    200 => array('height' => 200, 'width' => 200),
+    440 => array('height' => 440, 'width' => 440),
+    600 => array('height' => 600, 'width' => 600),
   );
 
   return $d500px_photo_sizes_array;
