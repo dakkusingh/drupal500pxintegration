@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\D500px\D500pxIntegration.
- */
-
 namespace Drupal\D500px;
 
 use Drupal\Core\Config\ConfigFactory;
@@ -20,47 +15,60 @@ use GuzzleHttp\Subscriber\Oauth\Oauth1;
 class D500pxIntegration {
 
   /**
+   * Config.
+   *
    * @var \Drupal\Core\Config\Config
    */
   protected $config;
 
   /**
+   * Request Token URL.
+   *
    * @var string
    */
-  protected $request_token_url;
+  protected $requestTokenUrl;
 
   /**
+   * Auth URL.
+   *
    * @var string
    */
-  protected $authorize_url;
+  protected $authorizeUrl;
 
   /**
+   * Authentication URL.
+   *
    * @var string
    */
-  protected $authenticate_url;
+  protected $authenticateUrl;
 
   /**
+   * Access Token.
+   *
    * @var string
    */
-  protected $access_token_url;
+  protected $accessTokenUrl;
 
   /**
+   * Generic Url.
+   *
    * @var string
    */
-  protected $generic_url;
+  protected $genericUrl;
 
   /**
+   * Website URL.
+   *
    * @var string
    */
-  public $website_url;
-
+  public $websiteUrl;
 
   /**
    * Constructor for the 500px class.
    */
-  public function __construct(ConfigFactory $config_factory) {
+  public function __construct(ConfigFactory $configFactory) {
     // Get the config.
-    $this->config = $config_factory->get('d500px.settings');
+    $this->config = $configFactory->get('d500px.settings');
 
     // Add 500px config.
     $this->request_token_url = $this->config->get('api_uri') . '/v1/oauth/request_token';
@@ -79,7 +87,7 @@ class D500pxIntegration {
 
       // TODO investigate how to fetch tokens from 500px.
       // Until then set the token_secret to null.
-      'token_secret'      => ''
+      'token_secret'      => '',
     ]);
 
     $stack->push($middleware);
@@ -88,7 +96,7 @@ class D500pxIntegration {
       'base_uri' => $this->generic_url,
       'handler' => $stack,
       'auth' => 'oauth',
-      //'debug' => true
+      // 'debug' => true.
     ]);
 
   }
@@ -96,12 +104,17 @@ class D500pxIntegration {
   /**
    * Generic method to perform a request to 500px servers.
    *
-   * @param $url
+   * @param string $url
+   *   Url,.
    * @param array $parameters
+   *   Params.
    * @param string $method
+   *   Method.
+   *
    * @return mixed
+   *   JSON output.
    */
-  public function requestD500px($url, $parameters = array(), $method = 'GET') {
+  public function requestD500px($url, array $parameters = [], $method = 'GET') {
     $response = $this->client->request($method, $url, ['query' => $parameters]);
 
     // TODO Add some checking.

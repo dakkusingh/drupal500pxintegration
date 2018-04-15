@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\d500px\Form\D500pxSettingsForm.
- */
-
 namespace Drupal\d500px\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
@@ -43,41 +38,41 @@ class D500pxSettingsForm extends ConfigFormBase {
 
     $form['oauth'] = [
       '#type' => 'fieldset',
-      '#title' => t('OAuth Settings'),
+      '#title' => $this->t('OAuth Settings'),
     ];
 
     $form['oauth']['help'] = [
       '#type' => '#markup',
-      '#markup' => t('To get your OAuth credentials, you need to register your application on @link.', ['@link' => Link::fromTextAndUrl('https://500px.com/settings/applications', Url::fromUri('https://500px.com/settings/applications'))->toString()]),
+      '#markup' => $this->t('To get your OAuth credentials, you need to register your application on @link.', ['@link' => Link::fromTextAndUrl('https://500px.com/settings/applications', Url::fromUri('https://500px.com/settings/applications'))->toString()]),
     ];
 
     $form['oauth']['oauth_consumer_key'] = [
       '#type' => 'textfield',
-      '#title' => t('OAuth Consumer key'),
+      '#title' => $this->t('OAuth Consumer key'),
       '#default_value' => $config->get('oauth_consumer_key'),
     ];
 
     $form['oauth']['oauth_consumer_secret'] = [
       '#type' => 'textfield',
-      '#title' => t('OAuth Consumer secret'),
+      '#title' => $this->t('OAuth Consumer secret'),
       '#default_value' => $config->get('oauth_consumer_secret'),
     ];
 
     $form['d500px'] = [
       '#type' => 'fieldset',
-      '#title' => t('500px Settings'),
-      '#description' => t('The following settings connect 500px module with external APIs.'),
+      '#title' => $this->t('500px Settings'),
+      '#description' => $this->t('The following settings connect 500px module with external APIs.'),
     ];
 
     $form['d500px']['host_uri'] = [
       '#type' => 'textfield',
-      '#title' => t('500px Host'),
+      '#title' => $this->t('500px Host'),
       '#default_value' => $config->get('host_uri'),
     ];
 
     $form['d500px']['api_uri'] = [
       '#type' => 'textfield',
-      '#title' => t('500px API'),
+      '#title' => $this->t('500px API'),
       '#default_value' => $config->get('api_uri'),
     ];
 

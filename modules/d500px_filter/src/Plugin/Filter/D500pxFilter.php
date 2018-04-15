@@ -44,11 +44,11 @@ class D500pxFilter extends FilterBase {
           }
 
           $photoid = $vars['photoid'];
-          $params = array(
+          $params = [
             'image_size'    => $this->getSize($vars),
-          );
+          ];
 
-          $d500pxphotos = \Drupal::service('d500px.d500pxphotos');
+          $d500pxphotos = \Drupal::service('d500px.D500pxPhotos');
           $content = $d500pxphotos->getPhotoById($photoid, $params);
 
           if (!is_array($content)) {
@@ -69,7 +69,8 @@ class D500pxFilter extends FilterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    // TODO refactor this to use standard sizes from D500pxHelpers::photoGetSizes
+    // TODO
+    // Refactor this to use standard sizes from D500pxHelpers::photoGetSizes.
     $form['d500px_filter_imagesize'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Default imagesize of embed'),

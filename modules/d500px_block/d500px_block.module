@@ -1,23 +1,30 @@
 <?php
 
 /**
+ * @file
+ * Adds D500px Block theme integrations.
+ */
+
+/**
  * Implements hook_theme().
  */
 function d500px_block_theme() {
-  return array(
-    'd500px_block_photo' => array(
-      'variables' => array(),
-    ),
-    'd500px_block_photos' => array(
-      'variables' => array(),
-    ),
-  );
+  return [
+    'd500px_block_photo' => [
+      'variables' => [],
+    ],
+    'd500px_block_photos' => [
+      'variables' => [],
+    ],
+  ];
 }
 
+// @codingStandardsIgnoreStart
 /**
  * Implements hook_requirements().
  */
-//function d500px_block_requirements() {
-  // TODO Add hook_requirements to check if
-  // Api keys and other settings have been set.
-//}
+// Function d500px_block_requirements() {
+// TODO Add hook_requirements to check if
+// Api keys and other settings have been set.
+// }.
+// @codingStandardsIgnoreEnd

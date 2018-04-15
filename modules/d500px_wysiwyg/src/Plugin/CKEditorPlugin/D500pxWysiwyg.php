@@ -26,16 +26,16 @@ class D500pxWysiwyg extends CKEditorPluginBase {
    * {@inheritdoc}
    */
   public function getLibraries(Editor $editor) {
-    return array(
+    return [
       'core/drupal.ajax',
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfig(Editor $editor) {
-    return array();
+    return [];
   }
 
   /**
@@ -43,12 +43,12 @@ class D500pxWysiwyg extends CKEditorPluginBase {
    */
   public function getButtons() {
     $path = drupal_get_path('module', 'd500px_wysiwyg') . '/plugin';
-    return array(
-      'd500px_wysiwyg_add_button' => array(
+    return [
+      'd500px_wysiwyg_add_button' => [
         'label' => t('500px Photo'),
         'image' => $path . '/icon.png',
-      ),
-    );
+      ],
+    ];
   }
 
 }

@@ -29,20 +29,29 @@ function d500px_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_theme().
  */
 function d500px_theme() {
-  return array(
-    'd500px_photo' => array(
-      'variables' => array('photo' => NULL, 'photo_page_url' => NULL, 'attributes' => NULL, 'blackout_nsfw' => NULL),
-    ),
-    'd500px_photos' => array(
-      'variables' => array('photos' => NULL),
-    ),
-  );
+  return [
+    'd500px_photo' => [
+      'variables' => [
+        'photo' => NULL,
+        'photo_page_url' => NULL,
+        'attributes' => NULL,
+        'blackout_nsfw' => NULL,
+      ],
+    ],
+    'd500px_photos' => [
+      'variables' => [
+        'photos' => NULL,
+      ],
+    ],
+  ];
 }
 
+// @codingStandardsIgnoreStart
 /**
  * Implements hook_requirements().
  */
-//function d500px_requirements() {
-  // TODO Add hook_requirements to check if
-  // Api keys and other settings have been set.
-//}
+// Function d500px_requirements() {
+// TODO Add hook_requirements to check if
+// Api keys and other settings have been set.
+// }.
+// @codingStandardsIgnoreEnd
